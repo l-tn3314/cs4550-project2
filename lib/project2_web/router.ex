@@ -20,7 +20,8 @@ defmodule Project2Web.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", Project2Web do
-  #   pipe_through :api
-  # end
+   scope "/api/v1", Project2Web do
+     pipe_through :api
+     resources "/users", UserController, except: [:new, :edit]
+   end
 end
