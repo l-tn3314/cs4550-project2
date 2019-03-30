@@ -89,7 +89,7 @@ function Header(props) {
 
     return <div className="row my-2">
         <div className="col-4">
-        <h1>Project2</h1>
+        <a href="/"><h1>Project2</h1></a>
         </div>
         <div className="col-4">
         <p>
@@ -110,6 +110,7 @@ function UserList(props) {
                 <thead>
                   <tr>
                     <th>email</th>
+                    <th>display name</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -124,5 +125,6 @@ function User(props) {
       let {user} = props;
       return <tr>
             <td>{user.email}</td>
+            <td>{user.display_name}</td>
           </tr>;
 }
