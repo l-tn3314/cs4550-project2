@@ -11,7 +11,7 @@ export default function root_init(node) {
           <h2>It is {new Date().toLocaleTimeString()}.</h2>
         </div>
     );
-    ReactDOM.render(element, node);
+    ReactDOM.render(<Root  />, node);
 }
 
 class Root extends React.Component {
@@ -22,6 +22,7 @@ class Root extends React.Component {
             session: null,
             users: [],
         };
+        this.fetch_users();
     }
 
     update_login_form(data) {
@@ -82,7 +83,7 @@ function Header(props) {
             </div>;
     } else {
         session_info = <div className="my-2">
-            <p>Logged in as {session.user_id}</p>
+            <p>Logged in as {session.display_name}</p>
             </div>
     }
 
