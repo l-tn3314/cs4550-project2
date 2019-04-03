@@ -9,7 +9,8 @@ defmodule Project2.Users.User do
     field :points, :integer
     field :hometown, :string
     field :pw_last_try, :utc_datetime
-    has_many :friends, User
+    has_many :friends, Project2.Users.User
+    has_many :posts, Project2.Posts.Post
 
     timestamps()
   end
@@ -17,8 +18,8 @@ defmodule Project2.Users.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :display_name, :password_hash, :points, :hometown])
-    |> validate_required([:email, :display_name, :password_hash, :points, :hometown])
+    |> cast(attrs, [:email, :display_name, :password_hash, :points, :hometown, :pw_last_try])
+    |> validate_required([:email, :display_name, :password_hash, :points, :hometown, :pw_last_try])
     |> unique_constraint(:email)
   end
 end
