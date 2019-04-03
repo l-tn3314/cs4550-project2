@@ -3,10 +3,10 @@ defmodule Project2.Repo.Migrations.CreateReplies do
 
   def change do
     create table(:replies) do
-      add :content, :string
-      add :time, :utc_datetime
-      add :user_id, references(:users, on_delete: :nothing)
-      add :post_id, references(:posts, on_delete: :nothing)
+      add :content, :string, null: false
+      add :time, :utc_datetime, null: false
+      add :user_id, references(:users, on_delete: :nothing), null: false
+      add :post_id, references(:posts, on_delete: :nothing), null: false
 
       timestamps()
     end
