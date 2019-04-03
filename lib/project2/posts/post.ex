@@ -5,6 +5,7 @@ defmodule Project2.Posts.Post do
   schema "posts" do
     field :content, :string
     field :time, :utc_datetime
+    field :user_id, :id
     has_many :replies, Project2.Replies.Reply
     belongs_to :users, Project2.Users.User
 
