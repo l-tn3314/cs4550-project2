@@ -5,9 +5,8 @@ defmodule Project2.Replies.Reply do
   schema "replies" do
     field :content, :string
     field :time, :utc_datetime
-    field :user_id, :id
-    field :post_id, :id
-
+    belongs_to :user, Project2.Users.User
+    belongs_to :post, Project2.Posts.Post
     timestamps()
   end
 

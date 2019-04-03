@@ -21,7 +21,7 @@ Repo.insert!(%User{email: "bob@example.com", display_name: "bobby", password_has
 
 alias Project2.Posts.Post
 
-Repo.insert!(%Post{content: "I baked some chocolate chip cookies!", user_id: 1, time: DateTime.truncate(DateTime.utc_now(), :second)})
+Repo.insert!(%Post{content: "I baked some chocolate chip cookies!", time: DateTime.truncate(DateTime.utc_now(), :second)})
 
 alias Project2.Replies.Reply
 

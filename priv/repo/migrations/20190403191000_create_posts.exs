@@ -5,7 +5,7 @@ defmodule Project2.Repo.Migrations.CreatePosts do
     create table(:posts) do
       add :content, :string, null: false
       add :time, :utc_datetime
-      add :user_id, references(:users, on_delete: :nothing)
+      add :user_id, references(:users, on_delete: :delete_all)
 
       timestamps()
     end
