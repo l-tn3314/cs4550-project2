@@ -16,5 +16,5 @@ alias Project2.Users.User
 
 pwhash = Argon2.hash_pwd_salt("password")
 
-Repo.insert!(%User{email: "alice@example.com", display_name: "alice", password_hash: pwhash})
-Repo.insert!(%User{email: "bob@example.com", display_name: "bobby", password_hash: pwhash})
+Repo.insert!(%User{email: "alice@example.com", display_name: "alice", password_hash: pwhash, hometown: "San Bernadino", pw_last_try: DateTime.truncate(DateTime.utc_now(), :second)})
+Repo.insert!(%User{email: "bob@example.com", display_name: "bobby", password_hash: pwhash, hometown: "Boston", pw_last_try: DateTime.truncate(DateTime.utc_now(), :second)})
