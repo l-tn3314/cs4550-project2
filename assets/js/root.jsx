@@ -4,6 +4,8 @@ import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
 import _ from 'lodash';
 import $ from 'jquery';
 
+import UserProfile from './UserProfile';
+
 export default function root_init(node) {
     let element = (
         <div>
@@ -45,14 +47,15 @@ class Root extends React.Component {
     }
 
     render() {
-        return <Router>
-            <div>
-            <Header session={this.state.session} root={this} />
-            <Route path="/users" exact={true} render={() =>
-                <UserList users={this.state.users} />
-            } />
-            </div>
-            </Router>;
+      return <Router>
+        <div>
+          <Header session={this.state.session} root={this} />
+          <Route path="/users" exact={true} render={() =>
+            <UserList users={this.state.users} />
+          } />
+          <Route path="/users/:id" component={UserProfile} />
+        </div>
+      </Router>;
     }
 
     fetch_users() {
@@ -68,7 +71,6 @@ class Root extends React.Component {
         });
     }
 }
-
 
 function Header(props) {
     let {root, session} = props;

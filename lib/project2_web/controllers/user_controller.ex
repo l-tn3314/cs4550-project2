@@ -3,6 +3,8 @@ defmodule Project2Web.UserController do
 
   alias Project2.Users
   alias Project2.Users.User
+  alias Project2.Friends
+  alias Project2.Friends.FriendRequest
 
   action_fallback Project2Web.FallbackController
 
@@ -22,7 +24,17 @@ defmodule Project2Web.UserController do
 
   def show(conn, %{"id" => id}) do
     user = Users.get_user!(id)
-    render(conn, "show.json", user: user)
+    friends = Friends.get_friend_ids_for(id)
+    {req_sent_to, req_recv_from} = Friends.get_friend_requests_for(id)
+
+    # TODO: replace with token verification?
+    current_user_id = get_session(conn, :user_id)
+
+    friend_info = Map.put(%{}, :is_friend, Enum.member?(friends, current_user_id))
+    |> Map.put(:has_request_from, Enum.member?(req_sent_to, current_user_id))
+    |> Map.put(:sent_request_to, Enum.member?(req_recv_from, current_user_id))
+    
+    render(conn, "show.json", user: user, friend_info: friend_info)
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
