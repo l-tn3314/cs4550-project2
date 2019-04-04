@@ -38,3 +38,10 @@ secure local password authentication ( I think local means not passing authentic
 users in Postgres. Users have history lists, favorites, and friends lists. (Friendship should go both ways. Both have to accept.) * the follow model as on twitter or instagram is simpler to implement
 real time updates from actions by other concurrent users (share works with other users)
 (Note: I think all the other requirements would be  satisfied/given) 
+
+-------------
+- Points shown on user profile 
+- Leaderboard among friends
+- Earn/lose points depending on weather
+- See how friends are doing
+
