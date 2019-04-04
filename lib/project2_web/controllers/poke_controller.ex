@@ -18,21 +18,35 @@ defmodule Project2Web.PokeController do
       arr = String.split(user.hometown, ",")
 
       city = Enum.at(arr, 0)
-      state = String.trim(Enum.at(arr, 1))
-      zip = String.trim(Enum.at(arr, 2))
+      country_code = String.trim(Enum.at(arr, 1))
 
       api_key = "e6d0c89e30239fe1489387d434108f24"
-      url = "api.openweathermap.org/data/2.5/weather?zip=#{zip},us#{api_key}"
+      url = "api.openweathermap.org/data/2.5/weather?q=#{city},#{country_code}&appid=#{api_key}"
 
       {:ok, response} = HTTPoison.get(url, [], [])
-      req = Poison.decode!(response.body)
+      json = Poison.decode!(response.body)
 
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", Routes.poke_path(conn, :show, poke))
-      |> render("show.json", poke: poke)
+      weather = Enum.at(json["weather"], 0)["main"]
+      accuracy = Enum.random(1..100)
+
+      if (weather == "Clear") or 
+          (weather == "Clouds" and accuracy > 20) or 
+          (weather == "Rain" and accuracy > 50) or 
+          (weather == "Snow" and accuracy > 80) do
+          create(conn, poke)
+      else
+          nil
+      end
+
     end
   end
+
+  def create(conn, poke) do
+    conn
+    |> put_status(:created)
+    |> put_resp_header("location", Routes.poke_path(conn, :show, poke))
+    |> render("show.json", poke: poke)
+    end
 
   def show(conn, %{"id" => id}) do
     poke = Pokes.get_poke!(id)
