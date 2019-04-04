@@ -11,5 +11,7 @@ defmodule Project2.Repo.Migrations.CreateFriends do
 
     create index(:friends, [:lower_user_id])
     create index(:friends, [:higher_user_id])
+
+    create unique_index(:friends, [:lower_user_id, :higher_user_id])
   end
 end

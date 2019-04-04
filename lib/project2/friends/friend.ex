@@ -12,7 +12,7 @@ defmodule Project2.Friends.Friend do
   @doc false
   def changeset(friend, attrs) do
     friend
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:lower_user_id, :higher_user_id])
+    |> validate_required([:lower_user_id, :higher_user_id])
   end
 end

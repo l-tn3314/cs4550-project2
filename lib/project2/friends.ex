@@ -52,6 +52,12 @@ defmodule Project2.Friends do
   """
   def get_friend_request!(id), do: Repo.get!(FriendRequest, id)
 
+  def get_user_friend_request(sender_id, receiver_id) do
+    query = from fr in FriendRequest,
+      where: fr.sender_id == ^sender_id and fr.receiver_id == ^receiver_id
+    Repo.get_by(query, sender_id: sender_id)
+  end
+
   @doc """
   Creates a friend_request.
 

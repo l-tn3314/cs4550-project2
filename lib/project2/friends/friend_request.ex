@@ -12,7 +12,7 @@ defmodule Project2.Friends.FriendRequest do
   @doc false
   def changeset(friend_request, attrs) do
     friend_request
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:sender_id, :receiver_id])
+    |> validate_required([:sender_id, :receiver_id])
   end
 end

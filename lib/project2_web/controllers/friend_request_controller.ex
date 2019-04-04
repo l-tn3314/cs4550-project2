@@ -19,6 +19,16 @@ defmodule Project2Web.FriendRequestController do
       |> render("show.json", friend_request: friend_request)
     end
   end
+  def create(conn, %{"user_id" => user_id}) do
+    # TODO: replace with token verification?
+    current_user_id = get_session(conn, :user_id)
+    with {:ok, %FriendRequest{} = friend_request} <- Friends.create_friend_request(%{"sender_id": current_user_id, "receiver_id": user_id}) do
+      conn
+      |> put_status(:created)  
+      |> render("show.json", friend_request: friend_request)
+    end 
+  end
+
 
   def show(conn, %{"id" => id}) do
     friend_request = Friends.get_friend_request!(id)
@@ -29,6 +39,19 @@ defmodule Project2Web.FriendRequestController do
     friend_request = Friends.get_friend_request!(id)
 
     with {:ok, %FriendRequest{} = friend_request} <- Friends.update_friend_request(friend_request, friend_request_params) do
+      render(conn, "show.json", friend_request: friend_request)
+    end
+  end
+  def update(conn, %{"user_id" => user_id}) do
+    # TODO: replace with token verification?
+    current_user_id = get_session(conn, :user_id)
+    
+    friend_request = Friends.get_user_friend_request(user_id, current_user_id)
+    if friend_request do   
+      Friends.delete_friend_request(friend_request)
+      Friends.create_friend(%{"lower_user_id": min(user_id, current_user_id), "higher_user_id": max(user_id, current_user_id)})
+      render(conn, "show.json", friend_request: friend_request)
+    else 
       render(conn, "show.json", friend_request: friend_request)
     end
   end

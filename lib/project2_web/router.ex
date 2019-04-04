@@ -19,19 +19,23 @@ defmodule Project2Web.Router do
 
     get "/", PageController, :index
     get "/users", PageController, :index
+    get "/users/:id", PageController, :index
     get "/posts", PageController, :index
     get "/replies", PageController, :index
     get "/pokes", PageController, :index
   end
 
   # Other scopes may use custom stacks.
-   scope "/api/v1", Project2Web do
-     pipe_through :api
+  scope "/api/v1", Project2Web do
+    pipe_through :api
 
-     resources "/pokes", PokeController, except: [:new, :edit]
-     resources "/posts", PostController, except: [:new, :edit]
-     resources "/replies", ReplyController, except: [:new, :edit]
-     resources "/users", UserController, except: [:new, :edit]
-     post "/auth", AuthController, :authenticate
-   end
+    #resources "/friendrequests", FriendRequestsController, except: [:new, :edit]
+    resources "/pokes", PokeController, except: [:new, :edit]
+    resources "/posts", PostController, except: [:new, :edit]
+    resources "/replies", ReplyController, except: [:new, :edit]
+    resources "/users", UserController, except: [:new, :edit]
+    post "/friendrequests/:user_id", FriendRequestController, :create    
+    put "/friendrequests/:user_id", FriendRequestController, :update    
+    post "/auth", AuthController, :authenticate
+  end
 end
