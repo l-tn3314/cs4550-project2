@@ -117,6 +117,20 @@ defmodule Project2.Friends do
     Repo.all(Friend)
   end
 
+  def get_friend_ids_for(id) do
+    friends_id_query = from f in Friend,
+      where: f.lower_user_id == ^id or f.higher_user_id == ^id
+    Repo.all(friends_id_query)
+    |> Enum.map(fn relation -> 
+        {id_val, _} = Integer.parse(id)
+        if relation.lower_user_id == id_val do
+          relation.higher_user_id
+        else 
+          relation.lower_user_id
+        end
+      end)
+  end
+
   @doc """
   Gets a single friend.
 

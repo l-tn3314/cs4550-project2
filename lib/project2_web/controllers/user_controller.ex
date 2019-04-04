@@ -3,6 +3,9 @@ defmodule Project2Web.UserController do
 
   alias Project2.Users
   alias Project2.Users.User
+  alias Project2.Friends
+  alias Project2.Friends.Friend
+  alias Project2.Friends.FriendRequest
 
   action_fallback Project2Web.FallbackController
 
@@ -22,8 +25,11 @@ defmodule Project2Web.UserController do
 
   def show(conn, %{"id" => id}) do
     user = Users.get_user!(id)
+    friends = Friends.get_friend_ids_for(id)
+    IO.inspect(friends)    
+    # TODO: booleans for isFriend and hasRequest and sentRequest
     
-    render(conn, "show.json", user: user)
+    render(conn, "show.json", user: user, friends: friends)
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
