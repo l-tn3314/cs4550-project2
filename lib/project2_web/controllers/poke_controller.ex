@@ -13,6 +13,20 @@ defmodule Project2Web.PokeController do
 
   def create(conn, %{"poke" => poke_params}) do
     with {:ok, %Poke{} = poke} <- Pokes.create_poke(poke_params) do
+      user = Project2.Users.get_user!(poke.user_id)
+
+      arr = String.split(user.hometown, ",")
+
+      city = Enum.at(arr, 0)
+      state = String.trim(Enum.at(arr, 1))
+      zip = String.trim(Enum.at(arr, 2))
+
+      api_key = "e6d0c89e30239fe1489387d434108f24"
+      url = "api.openweathermap.org/data/2.5/weather?zip=#{zip},us#{api_key}"
+
+      {:ok, response} = HTTPoison.get(url, [], [])
+      req = Poison.decode!(response.body)
+
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.poke_path(conn, :show, poke))
