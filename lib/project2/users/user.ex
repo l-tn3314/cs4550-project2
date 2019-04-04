@@ -9,8 +9,9 @@ defmodule Project2.Users.User do
     field :points, :integer
     field :hometown, :string
     field :pw_last_try, :utc_datetime
-    has_many :friends, Project2.Users.User
     has_many :posts, Project2.Posts.Post
+    # friends will be represented in a relations table...
+    #many_to_many :friends, Project2.Users.User, join_through: "friends"
 
     timestamps()
   end

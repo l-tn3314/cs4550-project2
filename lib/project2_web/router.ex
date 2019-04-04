@@ -27,10 +27,10 @@ defmodule Project2Web.Router do
    scope "/api/v1", Project2Web do
      pipe_through :api
 
-     resources "/users", UserController, except: [:new, :edit]
+     resources "/pokes", PokeController, except: [:new, :edit]
      resources "/posts", PostController, except: [:new, :edit]
      resources "/replies", ReplyController, except: [:new, :edit]
-     resources "/pokes", PokeController, except: [:new, :edit]
+     resources "/users", UserController, except: [:new, :edit]
      post "/auth", AuthController, :authenticate
    end
 end

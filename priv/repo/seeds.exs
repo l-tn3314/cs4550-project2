@@ -18,6 +18,10 @@ pwhash = Argon2.hash_pwd_salt("password")
 
 Repo.insert!(%User{email: "alice@example.com", display_name: "alice", password_hash: pwhash, hometown: "San Bernadino", pw_last_try: DateTime.truncate(DateTime.utc_now(), :second)})
 Repo.insert!(%User{email: "bob@example.com", display_name: "bobby", password_hash: pwhash, hometown: "Boston", pw_last_try: DateTime.truncate(DateTime.utc_now(), :second)})
+Repo.insert!(%User{email: "cal@example.com", display_name: "cal", password_hash: pwhash, hometown: "Boston", pw_last_try: DateTime.truncate(DateTime.utc_now(), :second)})
+
+alias Project2.Friends.Friend
+Repo.insert!(%Friend{lower_user_id: 1, higher_user_id: 2})
 
 alias Project2.Posts.Post
 

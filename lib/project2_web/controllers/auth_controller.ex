@@ -16,6 +16,7 @@ defmodule Project2Web.AuthController do
          }
 
       conn
+      |> put_session(:user_id, user.id)
       |> put_resp_header("content-type", "application/json; charset=UTF-8")
       |> send_resp(:created, Jason.encode!(resp))
       end
