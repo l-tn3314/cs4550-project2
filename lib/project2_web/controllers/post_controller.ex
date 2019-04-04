@@ -21,7 +21,7 @@ defmodule Project2Web.PostController do
   end
 
   def show(conn, %{"id" => id}) do
-    post = Posts.get_post!(id)
+    post = Posts.get_post(id)
     render(conn, "show.json", post: post)
   end
 

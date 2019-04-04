@@ -2,6 +2,8 @@ import React from 'react';
 
 import api from './api';
 
+import WallPosts from './WallPosts';
+
 // TODO make this a function after adding store...?
 class UserProfile extends React.Component {
   constructor(props) {
@@ -49,6 +51,8 @@ class UserProfile extends React.Component {
     return <div>
         <h2>{this.state.display_name}</h2>
         {friendStatus}
+
+        <WallPosts posts={this.state.posts} /> 
       </div>;
   }
     

@@ -32,6 +32,8 @@ Repo.insert!(%FriendRequest{sender_id: 4, receiver_id: 1})
 alias Project2.Posts.Post
 
 Repo.insert!(%Post{content: "I baked some chocolate chip cookies!", user_id: 1, time: DateTime.truncate(DateTime.utc_now(), :second)})
+Repo.insert!(%Post{content: "I baked some more cookies!", user_id: 1, time: DateTime.truncate(DateTime.utc_now(), :second)})
+Repo.insert!(%Post{content: "I baked some banana bread!", user_id: 1, time: DateTime.truncate(DateTime.utc_now(), :second)})
 
 alias Project2.Replies.Reply
 
