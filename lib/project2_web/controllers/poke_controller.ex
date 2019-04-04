@@ -12,8 +12,7 @@ defmodule Project2Web.PokeController do
   end
 
   def create(conn, %{"poke" => poke_params}) do
-    with {:ok, %Poke{} = poke} <- Pokes.create_poke(poke_params) do
-      user = Project2.Users.get_user!(poke.user_id)
+      user = Project2.Users.get_user!(get_session(conn, :user_id))
 
       arr = String.split(user.hometown, ",")
 
@@ -33,13 +32,13 @@ defmodule Project2Web.PokeController do
           (weather == "Clouds" and accuracy > 20) or 
           (weather == "Rain" and accuracy > 50) or 
           (weather == "Snow" and accuracy > 80) do
-          create(conn, poke)
+          with {:ok, %Poke{} = poke} <- Pokes.create_poke(poke_params) do
+            create(conn, poke)
+          end
       else
-          nil
+          conn
       end
-
     end
-  end
 
   def create(conn, poke) do
     conn
