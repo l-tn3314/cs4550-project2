@@ -21,6 +21,21 @@ defmodule Project2.Friends do
     Repo.all(FriendRequest)
   end
 
+  # returns tuple of friend requests sent_to other users, and received_from other users
+  def get_friend_requests_for(id) do
+    friend_request_query = from f in FriendRequest,
+      where: f.sender_id == ^id or f.receiver_id == ^id
+    friend_requests = Repo.all(friend_request_query)
+    {id_val, _} = Integer.parse(id)
+    sent_to = friend_requests
+      |> Enum.filter(fn relation -> relation.sender_id == id_val end)
+      |> Enum.map(fn relation -> relation.receiver_id end)
+    received_from = friend_requests
+      |> Enum.filter(fn relation -> relation.receiver_id == id_val end)
+      |> Enum.map(fn relation -> relation.sender_id end)
+    {sent_to, received_from}
+  end
+
   @doc """
   Gets a single friend_request.
 
@@ -120,9 +135,9 @@ defmodule Project2.Friends do
   def get_friend_ids_for(id) do
     friends_id_query = from f in Friend,
       where: f.lower_user_id == ^id or f.higher_user_id == ^id
+    {id_val, _} = Integer.parse(id)
     Repo.all(friends_id_query)
     |> Enum.map(fn relation -> 
-        {id_val, _} = Integer.parse(id)
         if relation.lower_user_id == id_val do
           relation.higher_user_id
         else 
