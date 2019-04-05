@@ -14,7 +14,8 @@ class EditUserForm  extends React.Component {
         edited: false,
         display_name: "Loading",
         email: "Loading",
-        hometown: "Loading"
+        hometown: "Loading",
+        logout_func: props.logout
     };
   }
 
@@ -68,8 +69,30 @@ class EditUserForm  extends React.Component {
       this.setState(state);
   }
 
+  confirm_delete() {
+    this.setState({confirm_delete: true});
+  }
+
+  actually_delete() {
+    let self = this;
+    $.ajax("/api/v1/users/" + this.state.user_id, {
+         method: "delete",
+         success:
+          (resp) => {
+              self.setState({redirect: true});
+              self.state.logout_func();
+          },
+         error: (resp) => {
+             self.setState({error: true});
+         }
+     });
+  }
+
   render() {
       let self = this;
+      if (this.state.redirect) {
+          return <Redirect to="/" />;
+      }
       let msg = [];
       if (this.state.error) {
           msg = <div className="alert alert-danger" role="alert">
@@ -80,6 +103,15 @@ class EditUserForm  extends React.Component {
               Changes saved
           </div>;
       }
+
+      let confirm_delete = [];
+      if (this.state.confirm_delete) {
+        confirm_delete = <div>
+            <h3> Are you sure?</h3>
+            <button type="button" className="btn btn-danger" onClick={() => self.actually_delete()}>Confirm Account Deletion</button>
+        </div>;
+      }
+
       return <div>
             <h2>Edit Profile</h2>
             {msg}
@@ -110,6 +142,9 @@ class EditUserForm  extends React.Component {
                   </div>
                   <button type="submit" className="btn btn-primary">Save</button>
               </form>
+            <h2>Danger Zone</h2>
+            <button type="button" className="btn btn-warning" onClick={() => self.confirm_delete()}>Delete Account</button>
+            {confirm_delete}
           </div>
   }
 } 
