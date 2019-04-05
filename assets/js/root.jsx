@@ -7,6 +7,7 @@ import $ from 'jquery';
 import Post from './Post';
 import UserProfile from './UserProfile';
 import RegisterForm from './RegisterForm';
+import EditUserForm from './EditUserForm';
 
 export default function root_init(node) {
     let element = (
@@ -74,6 +75,10 @@ class Root extends React.Component {
           <Route path="/users/:id" component={UserProfile} />
           <Route path="/posts/:id" component={Post} />
           <Route path="/register" component={RegisterForm} />
+          <Route path="/edituser" render={() =>
+                  <EditUserForm user_id={this.state.session && this.state.session.user_id || 0} />
+          } />
+
         </div>
       </Router>;
     }
@@ -110,6 +115,7 @@ function Header(props) {
     } else {
         session_info = <div className="my-2">
             <p>Logged in as {session.display_name}</p>
+            <Link to={"/edituser"}>Edit Profile</Link><br/>
             <button className="btn btn-secondary" onClick={() => root.logout()}>Log Out</button>
             </div>
     }

@@ -87,6 +87,9 @@ defmodule Project2.Users do
 
   """
   def update_user(%User{} = user, attrs) do
+   attrs = Map.put(attrs, "password_hash", Argon2.hash_pwd_salt(Map.get(attrs, "password")))
+            |> Map.put("pw_last_try", NaiveDateTime.utc_now())
+            |> Map.put("pw_tries", 0)
     user
     |> User.changeset(attrs)
     |> Repo.update()

@@ -20,6 +20,7 @@ defmodule Project2Web.UserView do
     %{id: user.id,
       email: user.email,
       display_name: user.display_name,
+      hometown: user.hometown,
       posts: posts,
       is_friend: friend_info.is_friend,
       has_request_from: friend_info.has_request_from,
