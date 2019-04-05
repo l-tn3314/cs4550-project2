@@ -12,6 +12,7 @@ defmodule Project2Web.AuthController do
           data: %{
             token: Phoenix.Token.sign(Project2Web.Endpoint, "user_id", user.id),
             user_id: user.id,
+            display_name: user.display_name,
            }
          }
 

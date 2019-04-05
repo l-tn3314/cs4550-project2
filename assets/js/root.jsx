@@ -23,6 +23,7 @@ class Root extends React.Component {
         this.state = {
             login_form: {email: "", password: ""},
             session: null,
+            error: null,
             users: [],
         };
         this.fetch_users();
@@ -41,10 +42,19 @@ class Root extends React.Component {
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify(this.state.login_form),
             success: (resp) => {
-                let state1 = _.assign({}, this.state, { session: resp.data });
+                let state1 = _.assign({}, this.state, { session: resp.data, error: null });
+                this.setState(state1);
+            },
+            error: (resp) => {
+                let state1 = _.assign({}, this.state, { error: "Login failed"});
                 this.setState(state1);
             }
         });
+    }
+
+    logout() {
+        let state1 = _.assign({}, this.state, {session:null});
+        this.setState(state1);
     }
 
     render() {
@@ -79,21 +89,26 @@ function Header(props) {
     let session_info;
     if (session == null) {
         session_info = <div className="form-inline my-2">
+            <form action="javascript:void(0)" onSubmit={() => root.login()}>
             <input type="email" placeholder="email"
         onChange={(ev) => root.update_login_form({email: ev.target.value})} />
             <input type="password" placeholder="password"
         onChange={(ev) => root.update_login_form({password: ev.target.value})} />
-            <button className="btn btn-secondary" onClick={() => root.login()}>Login</button>
+            <button className="btn btn-secondary" type="submit">Login</button>
+            <br/>
+            {root.state.error || ""}
+            </form>
             </div>;
     } else {
         session_info = <div className="my-2">
             <p>Logged in as {session.display_name}</p>
+            <button className="btn btn-secondary" onClick={() => root.logout()}>Log Out</button>
             </div>
     }
 
     return <div className="row my-2">
         <div className="col-4">
-        <a href="/"><h1>Project2</h1></a>
+            <Link to={"/"}><h1>Project2</h1></Link>
         </div>
         <div className="col-4">
         <p>
