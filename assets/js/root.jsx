@@ -21,9 +21,13 @@ export default function root_init(node) {
 class Root extends React.Component {
     constructor(props) {
         super(props);
+        let session = null;
+        if( localStorage["project2_session"]) {
+            session = JSON.parse( localStorage["project2_session"]);
+        }
         this.state = {
             login_form: {email: "", password: ""},
-            session: null,
+            session: session,
             error: null,
             users: [],
         };
@@ -43,6 +47,7 @@ class Root extends React.Component {
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify(this.state.login_form),
             success: (resp) => {
+                localStorage["project2_session"] = JSON.stringify(resp.data);
                 let state1 = _.assign({}, this.state, { session: resp.data, error: null });
                 this.setState(state1);
             },
@@ -54,6 +59,7 @@ class Root extends React.Component {
     }
 
     logout() {
+        delete localStorage["project2_session"];
         let state1 = _.assign({}, this.state, {session:null});
         this.setState(state1);
     }
