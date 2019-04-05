@@ -21,6 +21,7 @@ defmodule Project2Web.Router do
     get "/users", PageController, :index
     get "/users/:id", PageController, :index
     get "/posts", PageController, :index
+    get "/posts/:id", PageController, :index
     get "/replies", PageController, :index
     get "/pokes", PageController, :index
   end

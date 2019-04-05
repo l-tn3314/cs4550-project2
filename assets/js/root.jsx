@@ -4,6 +4,7 @@ import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
 import _ from 'lodash';
 import $ from 'jquery';
 
+import Post from './Post';
 import UserProfile from './UserProfile';
 
 export default function root_init(node) {
@@ -54,6 +55,7 @@ class Root extends React.Component {
             <UserList users={this.state.users} />
           } />
           <Route path="/users/:id" component={UserProfile} />
+          <Route path="/posts/:id" component={Post} />
         </div>
       </Router>;
     }

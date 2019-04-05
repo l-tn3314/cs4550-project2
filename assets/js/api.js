@@ -18,6 +18,25 @@ class TheServer {
     });
   }
 
+  fetch_post(id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    $.ajax("/api/v1/posts/" + id, {
+      method: "get",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      data: "",
+      success: (resp) => {
+        console.log("success!")
+        console.log(resp);
+        successCallback(resp);
+      },
+      error: (resp) => {
+        console.log("failed to fetch post " + id);
+        console.log(resp);
+        errorCallback(resp);
+      },
+    });
+  }
+  
   // TODO token
   accept_friend_request(id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
     $.ajax("/api/v1/friendrequests/" + id, {
