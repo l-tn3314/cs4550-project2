@@ -37,6 +37,7 @@ defmodule Project2Web.PokeController do
           end
       else
           conn
+          |> put_flash(:info, "Poke Failed Due to Inclement Weather...")
       end
     end
 
