@@ -6,6 +6,7 @@ import $ from 'jquery';
 
 import Post from './Post';
 import UserProfile from './UserProfile';
+import RegisterForm from './RegisterForm';
 
 export default function root_init(node) {
     let element = (
@@ -66,6 +67,7 @@ class Root extends React.Component {
           } />
           <Route path="/users/:id" component={UserProfile} />
           <Route path="/posts/:id" component={Post} />
+          <Route path="/register" component={RegisterForm} />
         </div>
       </Router>;
     }
@@ -106,6 +108,11 @@ function Header(props) {
             </div>
     }
 
+    let register_link = [];
+    if (session == null) {
+        register_link = <Link to={"/register"}>Register</Link>;
+    }
+
     return <div className="row my-2">
         <div className="col-4">
             <Link to={"/"}><h1>Project2</h1></Link>
@@ -113,6 +120,8 @@ function Header(props) {
         <div className="col-4">
         <p>
         <Link to={"/users"}>Users</Link>
+        &nbsp;
+        {register_link}
         </p>
         </div>
         <div className="col-4">

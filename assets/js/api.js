@@ -73,14 +73,25 @@ class TheServer {
   }
 
   register_user(display_name, email, password, hometown) {
-      this.send_post("/api/v1/users",
-          {"user": {display_name, email, password, hometown}},
+     $.ajax("/api/v1/users", {
+         method: "post",
+         dataType: "json",
+         contentType: "application/json; charset=UTF-8",
+         data: {"user": {display_name, email, password, hometown}},
+         success:
           (resp) => {
             this.fetch_user();
             store.dispatch({
               type: 'REGISTERED',
             });
-          })
+          },
+         error: (resp) => {
+             this.fetch_user();
+             store.dispatch({
+                 type: "REGISTER_ERROR",
+             });
+         }
+     });
   }
 
   create_session(display_name, email, password, hometown) {
