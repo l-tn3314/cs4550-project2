@@ -73,6 +73,21 @@ defmodule Project2.Replies do
     |> Repo.update()
   end
 
+  def delete_replies_for(id) do
+    reply_query = from r in Reply,
+     where: r.user_id == ^id
+    Repo.all(reply_query)
+    |> Enum.map(fn r -> delete_reply(r) end)
+  end
+
+  def delete_replies_for_post(id) do
+    reply_query = from r in Reply,
+     where: r.post_id == ^id
+    Repo.all(reply_query)
+    |> Enum.map(fn r -> delete_reply(r) end)
+  end
+
+
   @doc """
   Deletes a Reply.
 

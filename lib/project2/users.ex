@@ -108,6 +108,10 @@ defmodule Project2.Users do
 
   """
   def delete_user(%User{} = user) do
+    Project2.Friends.delete_friends_for(user.id)
+    Project2.Friends.delete_friend_requests_for(user.id)
+    Project2.Posts.delete_posts_for(user.id)
+    Project2.Replies.delete_replies_for(user.id)
     Repo.delete(user)
   end
 
