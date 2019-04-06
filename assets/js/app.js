@@ -6,6 +6,7 @@ import "bootstrap";
 import _ from "lodash";
 
 import root_init from "./root";
+import socket from "./socket";
 
 $(() => {
       let node = $('#root')[0];

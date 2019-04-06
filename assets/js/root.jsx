@@ -26,6 +26,7 @@ class Root extends React.Component {
             session: null,
             error: null,
             users: [],
+            notifications: [],
         };
         this.fetch_users();
     }
