@@ -1,3 +1,13 @@
 /* This file is for your main application css. */
 
 @import "~bootstrap/scss/bootstrap";
+
+.input-div{
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.post-input {
+  width: 100%;
+}

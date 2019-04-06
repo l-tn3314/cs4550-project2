@@ -21,6 +21,7 @@ defmodule Project2Web.UserView do
       email: user.email,
       display_name: user.display_name,
       hometown: user.hometown,
+      points: user.points,
       posts: posts,
       is_friend: friend_info.is_friend,
       has_request_from: friend_info.has_request_from,

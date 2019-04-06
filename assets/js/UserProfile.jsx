@@ -62,17 +62,31 @@ class UserProfile extends React.Component {
     let createPost;
 
     if (this.props.session && this.props.session.user_id == this.user_id) {
-      createPost = <span>
-          <input placeholder="What's on my mind..." value={this.state.new_post_content} onChange={(ev) => this.updateState({new_post_content: ev.target.value})} /> 
-          <button className="btn btn-primary" onClick={this.createNewPost.bind(this)}>Post</button>
-        </span>;
+      createPost = <div className="row">
+          <div className="col-6 input-div">
+            <input className="post-input" placeholder="What's on my mind..." value={this.state.new_post_content} onChange={(ev) => this.updateState({new_post_content: ev.target.value})} /> 
+          </div>
+          <div className="col-2">  
+            <button className="btn btn-primary" onClick={this.createNewPost.bind(this)}>Post</button>
+          </div>
+        </div>;
 
     }
 
     return <div>
-        <h2>{this.state.display_name}</h2>
-        {friendStatus}
-        {createPost}
+        <div className="row">
+          <div className="col-6">
+            <h2>{this.state.display_name}</h2>
+          </div>
+          <div className="col-6">
+            {friendStatus}
+            <i>Points: {this.state.points}</i>
+          </div>
+        </div>
+        <div>
+          {createPost}
+        </div>
+        
         <WallPosts session={this.props.session} posts={this.state.posts} deleteCallback={this.fetchUser.bind(this)} /> 
       </div>;
   }
