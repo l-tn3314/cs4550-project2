@@ -79,6 +79,13 @@ defmodule Project2.Posts do
     |> Repo.update()
   end
 
+  def delete_posts_for(id) do
+    posts_query = from p in Post,
+      where: p.user_id == ^id
+    Repo.all(posts_query)
+    |> Enum.map(fn post -> delete_post(post) end)
+  end
+
   @doc """
   Deletes a Post.
 
@@ -92,6 +99,7 @@ defmodule Project2.Posts do
 
   """
   def delete_post(%Post{} = post) do
+    Project2.Replies.delete_replies_for_post(post.id)
     Repo.delete(post)
   end
 

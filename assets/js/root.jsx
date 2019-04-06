@@ -7,6 +7,7 @@ import $ from 'jquery';
 import Post from './Post';
 import UserProfile from './UserProfile';
 import RegisterForm from './RegisterForm';
+import EditUserForm from './EditUserForm';
 
 export default function root_init(node, channel) {
     let element = (
@@ -21,9 +22,13 @@ export default function root_init(node, channel) {
 class Root extends React.Component {
     constructor(props) {
         super(props);
+        let session = null;
+        if( localStorage["project2_session"]) {
+            session = JSON.parse( localStorage["project2_session"]);
+        }
         this.state = {
             login_form: {email: "", password: ""},
-            session: null,
+            session: session,
             error: null,
             users: [],
             notifications: [],
@@ -48,6 +53,7 @@ class Root extends React.Component {
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify(this.state.login_form),
             success: (resp) => {
+                localStorage["project2_session"] = JSON.stringify(resp.data);
                 let state1 = _.assign({}, this.state, { session: resp.data, error: null });
                 this.setState(state1);
 
@@ -65,6 +71,7 @@ class Root extends React.Component {
     }
 
     logout() {
+        delete localStorage["project2_session"];
         let state1 = _.assign({}, this.state, {session:null});
         this.setState(state1);
         
@@ -84,6 +91,10 @@ class Root extends React.Component {
           <Route path="/users/:id" component={UserProfile} />
           <Route path="/posts/:id" component={Post} />
           <Route path="/register" component={RegisterForm} />
+          <Route path="/edituser" render={() =>
+                  <EditUserForm logout={this.logout.bind(this)} user_id={this.state.session && this.state.session.user_id || 0} />
+          } />
+
         </div>
       </Router>;
     }
@@ -120,6 +131,7 @@ function Header(props) {
     } else {
         session_info = <div className="my-2">
             <p>Logged in as {session.display_name}</p>
+            <Link to={"/edituser"}>Edit Profile</Link><br/>
             <button className="btn btn-secondary" onClick={() => root.logout()}>Log Out</button>
             </div>
     }

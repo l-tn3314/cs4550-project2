@@ -87,6 +87,9 @@ defmodule Project2.Users do
 
   """
   def update_user(%User{} = user, attrs) do
+   attrs = Map.put(attrs, "password_hash", Argon2.hash_pwd_salt(Map.get(attrs, "password")))
+            |> Map.put("pw_last_try", NaiveDateTime.utc_now())
+            |> Map.put("pw_tries", 0)
     user
     |> User.changeset(attrs)
     |> Repo.update()
@@ -105,6 +108,10 @@ defmodule Project2.Users do
 
   """
   def delete_user(%User{} = user) do
+    Project2.Friends.delete_friends_for(user.id)
+    Project2.Friends.delete_friend_requests_for(user.id)
+    Project2.Posts.delete_posts_for(user.id)
+    Project2.Replies.delete_replies_for(user.id)
     Repo.delete(user)
   end
 
