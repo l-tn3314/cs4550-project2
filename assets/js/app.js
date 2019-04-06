@@ -9,7 +9,9 @@ import root_init from "./root";
 import socket from "./socket";
 
 $(() => {
+      let channel = socket.channel("notifications:lobby");
+    
       let node = $('#root')[0];
-      root_init(node);
+      root_init(node, channel);
 });
 

@@ -33,7 +33,7 @@ defmodule Project2Web.PokeController do
           (weather == "Rain" and accuracy > 50) or 
           (weather == "Snow" and accuracy > 80) do
           with {:ok, %Poke{} = poke} <- Pokes.create_poke(poke_params) do
-            Project2Web.NotificationsChannel.broadcast!(conn.socket, "poke", %{from: poke.sender, to: poke.recipient})
+            Project2Web.Endpoint.broadcast!("notifications:lobby", "poke", %{from: poke.sender, to: poke.recipient})
             create(conn, poke)
           end
       else
