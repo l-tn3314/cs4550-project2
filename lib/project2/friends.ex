@@ -36,6 +36,13 @@ defmodule Project2.Friends do
     {sent_to, received_from}
   end
 
+  def delete_friend_requests_for(id) do
+    friend_request_query = from f in FriendRequest,
+      where: f.sender_id == ^id or f.receiver_id == ^id
+    Repo.all(friend_request_query)
+    |> Enum.map(fn req -> delete_friend_request(req) end)
+  end
+
   @doc """
   Gets a single friend_request.
 
@@ -151,6 +158,18 @@ defmodule Project2.Friends do
         end
       end)
   end
+
+  def delete_friends_for(id) do
+    IO.inspect(id)
+    friends_id_query = from f in Friend,
+      where: f.lower_user_id == ^id or f.higher_user_id == ^id
+    Repo.all(friends_id_query)
+    |> Enum.map(fn relation -> 
+      IO.inspect(relation)
+        delete_friend(relation)
+      end)
+  end
+
 
   @doc """
   Gets a single friend.
