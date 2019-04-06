@@ -9,11 +9,6 @@ defmodule Project2Web.NotificationsChannel do
     end
   end
 
-  def leave("notifications:lobby", _payload, socket) do
-    IO.puts("leave")
-    {:ok, assign(socket, :user_id, nil)}
-  end
-
   # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
   def handle_in("ping", payload, socket) do
@@ -28,11 +23,8 @@ defmodule Project2Web.NotificationsChannel do
   end
 
   def handle_in("subscribe", %{"token" => user_token}, socket) do
-    IO.puts("subscribe")
     case Phoenix.Token.verify(socket, "user_id", user_token, max_age: 1209600) do
       {:ok, user_id} ->
-        IO.puts("subscribed")
-        IO.puts(user_id)
         {:noreply, assign(socket, :current_user_id, user_id)}
       {:error, _} ->
         {:noreply, %{reason: "unauthorized"}}
@@ -40,7 +32,6 @@ defmodule Project2Web.NotificationsChannel do
   end
 
   def handle_in("unsubscribe", _payload, socket) do
-    IO.puts("unsubscribe")
     {:noreply, assign(socket, :current_user_id, nil)}
   end
   
@@ -64,8 +55,6 @@ defmodule Project2Web.NotificationsChannel do
 
   def handle_out("friend_request", payload, socket) do
     current_id = Map.has_key?(socket.assigns, :current_user_id) && socket.assigns.current_user_id
-    IO.puts("handle out")
-    IO.puts(current_id)
     if (current_id == payload.to) do
       # send a notification to the state
       push(socket, "friend_request", payload)

@@ -25,14 +25,14 @@ class Root extends React.Component {
         super(props);
         let session = null;
         this.channel = props.channel;
-        
+    
         if( localStorage["project2_session"]) {
             session = JSON.parse( localStorage["project2_session"]);
         
             // subscribe if logged in
             this.channel
                 .join()
-                .receive("ok", r => { this.channel.push("subscribe", session) })
+                .receive("ok", r => { this.channel.push("subscribe", session); this.setChannelJoined(); })
                 .receive("error", r => { console.log("failed to join", r); })
         }
         this.state = {
@@ -41,22 +41,28 @@ class Root extends React.Component {
             error: null,
             users: [],
             notification: null, // for now, allow max of one notif at any given time
+            channelJoined: false,
         };
         this.fetch_users();
 
-        console.log('constr');
-    
         let friendRequestNotif = (payload) => {
-          console.log("friend request");
           this.setNotif(payload, "FRIEND_REQUEST");
         };
         this.channel.on("friend_request", friendRequestNotif.bind(this));
 
     }
-
+   
+    setChannelJoined() {
+      this.setState(_.assign({}, this.state, {channelJoined: true}));
+    }
+ 
     setNotif(payload, type) {
+      let closeNotif = () => {
+        this.setState(_.assign({}, this.state, {notification: null}));
+      }
+
       let notifProps = _.assign({}, payload, {type: type});
-      let notif = <Notification {...notifProps} />
+      let notif = <Notification {...payload} type={type} closeCallback={closeNotif.bind(this)} />
       this.setState(_.assign({}, this.state, {notification: notif}));
     }
 
@@ -77,11 +83,16 @@ class Root extends React.Component {
                 let state1 = _.assign({}, this.state, { session: resp.data, error: null });
                 this.setState(state1);
 
-                // join channel after logging in
-                this.channel
-                    .join()
-                    .receive("ok", r => { this.channel.push("subscribe", resp.data) })
-                    .receive("error", r => { console.log("failed to join", r); })
+                if (this.state.channelJoined) {
+                    // if already joined channle, just subscribe
+                    this.channel.push("subscribe", resp.data);
+                } else {
+                    // if not already joined channel, join channel after logging in
+                    this.channel
+                        .join()
+                        .receive("ok", r => { console.log("subscribe"); this.channel.push("subscribe", resp.data) })
+                        .receive("error", r => { console.log("failed to join", r); });
+                }
             },
             error: (resp) => {
                 let state1 = _.assign({}, this.state, { error: "Login failed"});
@@ -95,10 +106,8 @@ class Root extends React.Component {
         let state1 = _.assign({}, this.state, {session:null});
         this.setState(state1);
         
-        // unsubscribe and leave channel after logging out
+        // unsubscribe after logging out
         this.channel.push("unsubscribe", {});
-        this.channel
-            .leave()
     }
 
     render() {
