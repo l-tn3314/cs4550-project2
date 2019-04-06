@@ -4,6 +4,7 @@ import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
 import _ from 'lodash';
 import $ from 'jquery';
 
+import Notification from './Notification';
 import Post from './Post';
 import UserProfile from './UserProfile';
 import RegisterForm from './RegisterForm';
@@ -23,21 +24,40 @@ class Root extends React.Component {
     constructor(props) {
         super(props);
         let session = null;
+        this.channel = props.channel;
+        
         if( localStorage["project2_session"]) {
             session = JSON.parse( localStorage["project2_session"]);
+        
+            // subscribe if logged in
+            this.channel
+                .join()
+                .receive("ok", r => { this.channel.push("subscribe", session) })
+                .receive("error", r => { console.log("failed to join", r); })
         }
         this.state = {
             login_form: {email: "", password: ""},
             session: session,
             error: null,
             users: [],
-            notifications: [],
+            notification: null, // for now, allow max of one notif at any given time
         };
         this.fetch_users();
 
-        this.channel = props.channel;
-        this.channel.on("friend_request", payload => {alert("friend request!")});
+        console.log('constr');
+    
+        let friendRequestNotif = (payload) => {
+          console.log("friend request");
+          this.setNotif(payload, "FRIEND_REQUEST");
+        };
+        this.channel.on("friend_request", friendRequestNotif.bind(this));
 
+    }
+
+    setNotif(payload, type) {
+      let notifProps = _.assign({}, payload, {type: type});
+      let notif = <Notification {...notifProps} />
+      this.setState(_.assign({}, this.state, {notification: notif}));
     }
 
     update_login_form(data) {
@@ -85,6 +105,7 @@ class Root extends React.Component {
       return <Router>
         <div>
           <Header session={this.state.session} root={this} />
+          {this.state.notification}
           <Route path="/users" exact={true} render={() =>
             <UserList users={this.state.users} />
           } />
