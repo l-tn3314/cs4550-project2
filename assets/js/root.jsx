@@ -109,8 +109,12 @@ class Root extends React.Component {
           <Route path="/users" exact={true} render={() =>
             <UserList users={this.state.users} />
           } />
-          <Route path="/users/:id" component={UserProfile} />
-          <Route path="/posts/:id" component={Post} />
+          <Route path="/users/:id" render={(props) => 
+            <UserProfile {...props} session={this.state.session} />
+          } />
+          <Route path="/posts/:id" render={(props) =>
+            <Post {...props} session={this.state.session} />
+          } />
           <Route path="/register" component={RegisterForm} />
           <Route path="/edituser" render={() =>
                   <EditUserForm logout={this.logout.bind(this)} user_id={this.state.session && this.state.session.user_id || 0} />
