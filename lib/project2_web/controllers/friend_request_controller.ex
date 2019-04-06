@@ -1,6 +1,7 @@
 defmodule Project2Web.FriendRequestController do
   use Project2Web, :controller
 
+  alias Project2.Users
   alias Project2.Friends
   alias Project2.Friends.FriendRequest
 
@@ -23,7 +24,9 @@ defmodule Project2Web.FriendRequestController do
     # TODO: replace with token verification?
     current_user_id = get_session(conn, :user_id)
     with {:ok, %FriendRequest{} = friend_request} <- Friends.create_friend_request(%{"sender_id": current_user_id, "receiver_id": user_id}) do
-      Project2Web.Endpoint.broadcast!("notifications:lobby", "friend_request", %{from: friend_request.sender_id, to: friend_request.receiver_id})
+      # user creating the friend request
+      user = Users.get_user!(current_user_id)
+      Project2Web.Endpoint.broadcast!("notifications:lobby", "friend_request", %{from: friend_request.sender_id, to: friend_request.receiver_id, sender_displayname: user.display_name})
       conn
       |> put_status(:created)  
       |> render("show.json", friend_request: friend_request)
