@@ -38,12 +38,22 @@ class Post extends React.Component {
     api.create_new_reply(this.props.session.user_id, this.post_id, content, this.fetchPost.bind(this));
   }
 
+  deleteReply(id) {
+    api.delete_reply(id, this.fetchPost.bind(this));
+  }
+
   render() {
-    let replies = _.reverse(_.map(this.state.data.replies, (r) => (
-      <div key={r.id}>
+    let replies = _.reverse(_.map(this.state.data.replies, (r) => {
+      let deleteButton;
+      if (this.props.session && this.props.session.user_id == r.user_id) {
+        deleteButton = <button className="btn btn-danger" onClick={() => this.deleteReply(r.id)}>delete</button>
+      }
+
+      return <div key={r.id}>
         <b>{r.username}</b>: {r.content}
+        {deleteButton}
       </div>
-    ))); 
+    })); 
    
     let createReply; 
     if (this.props.session) {

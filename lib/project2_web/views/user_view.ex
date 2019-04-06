@@ -15,7 +15,7 @@ defmodule Project2Web.UserView do
 
   def render("user.json", %{user: user, friend_info: friend_info}) do
     posts = user.posts
-    |> Enum.map(fn post -> %{id: post.id, content: post.content} end)
+    |> Enum.map(fn post -> %{id: post.id, content: post.content, user_id: post.user_id} end)
    
     %{id: user.id,
       email: user.email,

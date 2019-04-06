@@ -12,12 +12,13 @@ defmodule Project2Web.PostView do
 
   def render("post.json", %{post: post}) do
     replies = post.replies
-    |> Enum.map(fn reply -> %{content: reply.content, time: reply.time, username: reply.user.display_name} end)
+    |> Enum.map(fn reply -> %{id: reply.id, content: reply.content, time: reply.time, username: reply.user.display_name, user_id: reply.user_id} end)
 
     %{id: post.id,
       content: post.content,
       time: post.time,
       replies: replies,
-      username: post.user.display_name}
+      username: post.user.display_name,
+      user_id: post.user.id}
   end
 end

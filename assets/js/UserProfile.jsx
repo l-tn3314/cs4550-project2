@@ -66,13 +66,14 @@ class UserProfile extends React.Component {
           <input placeholder="What's on my mind..." value={this.state.new_post_content} onChange={(ev) => this.updateState({new_post_content: ev.target.value})} /> 
           <button className="btn btn-primary" onClick={this.createNewPost.bind(this)}>Post</button>
         </span>;
+
     }
 
     return <div>
         <h2>{this.state.display_name}</h2>
         {friendStatus}
         {createPost}
-        <WallPosts posts={this.state.posts} /> 
+        <WallPosts session={this.props.session} posts={this.state.posts} deleteCallback={this.fetchUser.bind(this)} /> 
       </div>;
   }
     

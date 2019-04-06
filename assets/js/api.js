@@ -86,6 +86,39 @@ class TheServer {
     });
   }
 
+  delete_post(post_id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    $.ajax("/api/v1/posts/" + post_id, {
+      method: "delete",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      data: "",
+      success: (resp) => {
+        successCallback(resp);
+      },
+      error: (resp) => {
+        console.log("failed to delete post");
+        console.log(resp);
+        errorCallback(resp);
+      }, 
+    });
+  }
+  delete_reply(reply_id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    $.ajax("/api/v1/replies/" + reply_id, {
+      method: "delete",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      data: "",
+      success: (resp) => {
+        successCallback(resp);
+      },
+      error: (resp) => {
+        console.log("failed to delete reply");
+        console.log(resp);
+        errorCallback(resp);
+      }, 
+    });
+  }
+
   accept_friend_request(id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
     $.ajax("/api/v1/friendrequests/" + id, {
       method: "put",
