@@ -4,6 +4,8 @@ defmodule Project2Web.UserSocket do
   ## Channels
   # channel "room:*", Project2Web.RoomChannel
 
+  channel "notifications:lobby", Project2Web.NotificationsChannel
+
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
   # verification, you can put default assigns into

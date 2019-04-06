@@ -9,14 +9,14 @@ import UserProfile from './UserProfile';
 import RegisterForm from './RegisterForm';
 import EditUserForm from './EditUserForm';
 
-export default function root_init(node) {
+export default function root_init(node, channel) {
     let element = (
         <div>
           <h1>Hello, world!</h1>
           <h2>It is {new Date().toLocaleTimeString()}.</h2>
         </div>
     );
-    ReactDOM.render(<Root  />, node);
+    ReactDOM.render(<Root channel={channel} />, node);
 }
 
 class Root extends React.Component {
@@ -31,8 +31,13 @@ class Root extends React.Component {
             session: session,
             error: null,
             users: [],
+            notifications: [],
         };
         this.fetch_users();
+
+        this.channel = props.channel;
+        this.channel.on("friend_request", payload => {alert("friend request!")});
+
     }
 
     update_login_form(data) {
@@ -51,6 +56,12 @@ class Root extends React.Component {
                 localStorage["project2_session"] = JSON.stringify(resp.data);
                 let state1 = _.assign({}, this.state, { session: resp.data, error: null });
                 this.setState(state1);
+
+                // join channel after logging in
+                this.channel
+                    .join()
+                    .receive("ok", r => { this.channel.push("subscribe", resp.data) })
+                    .receive("error", r => { console.log("failed to join", r); })
             },
             error: (resp) => {
                 let state1 = _.assign({}, this.state, { error: "Login failed"});
@@ -63,6 +74,11 @@ class Root extends React.Component {
         delete localStorage["project2_session"];
         let state1 = _.assign({}, this.state, {session:null});
         this.setState(state1);
+        
+        // unsubscribe and leave channel after logging out
+        this.channel.push("unsubscribe", {});
+        this.channel
+            .leave()
     }
 
     render() {
