@@ -44,8 +44,13 @@ class Post extends React.Component {
   }
 
   render() {
-    let replies = _.reverse(_.map(this.state.data.replies, (r) => (
-      <div key={r.id}>
+    let replies = _.reverse(_.map(this.state.data.replies, (r) => {
+      let deleteButton;
+      if (this.props.session && this.props.session.user_id == r.user_id) {
+        deleteButton = <button className="btn btn-danger" onClick={() => this.deleteReply(r.id)}>delete</button>
+      }
+
+      return <div key={r.id}>
         <b>{r.username}</b>: {r.content}
         {deleteButton}
       </div>
