@@ -38,6 +38,54 @@ class TheServer {
   }
   
   // TODO token
+  create_new_post(user_id, content, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    let current_time = new Date().toISOString();
+    $.ajax("/api/v1/posts/", {
+      method: "post",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      data: JSON.stringify({
+        post: {
+          user_id: user_id, 
+          content: content,
+          time: current_time,
+        }
+      }),
+      success: (resp) => {
+        successCallback(resp);
+      },
+      error: (resp) => {
+        console.log("failed to create new post");
+        console.log(resp);
+        errorCallback(resp);
+      }, 
+    });
+  }
+  create_new_reply(user_id, post_id, content, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    let current_time = new Date().toISOString();
+    $.ajax("/api/v1/replies/", {
+      method: "post",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      data: JSON.stringify({
+        reply: {
+          user_id: user_id,
+          post_id: post_id, 
+          content: content,
+          time: current_time,
+        }
+      }),
+      success: (resp) => {
+        successCallback(resp);
+      },
+      error: (resp) => {
+        console.log("failed to create reply");
+        console.log(resp);
+        errorCallback(resp);
+      }, 
+    });
+  }
+
   accept_friend_request(id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
     $.ajax("/api/v1/friendrequests/" + id, {
       method: "put",
