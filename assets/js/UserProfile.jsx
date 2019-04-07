@@ -22,7 +22,8 @@ class UserProfile extends React.Component {
 
   fetchUser() {
     console.log("fetch user");
-    api.fetch_user(this.user_id, this.updateState.bind(this));
+    let token = this.props.session ? this.props.session.token : null;
+    api.fetch_user(token, this.user_id, this.updateState.bind(this));
   }
 
   updateState(state) {
@@ -30,17 +31,17 @@ class UserProfile extends React.Component {
   }
 
   acceptFriendRequest() {
-    api.accept_friend_request(this.user_id, this.fetchUser.bind(this));
+    api.accept_friend_request(this.props.session.token, this.user_id, this.fetchUser.bind(this));
   }
   deleteFriendRequest() {
-    api.delete_friend_request(this.user_id, this.fetchUser.bind(this));
+    api.delete_friend_request(this.props.session.token, this.user_id, this.fetchUser.bind(this));
   }
   sendFriendRequest() {
-    api.send_friend_request(this.user_id, this.fetchUser.bind(this));
+    api.send_friend_request(this.props.session.token, this.user_id, this.fetchUser.bind(this));
   }
   
   deleteFriend() {
-    api.delete_friend(this.user_id, this.fetchUser.bind(this));
+    api.delete_friend(this.props.session.token, this.user_id, this.fetchUser.bind(this));
   }
 
   pokeUser() {
@@ -52,7 +53,7 @@ class UserProfile extends React.Component {
     let content = this.state.new_post_content;
 
     this.updateState({new_post_content: ""});
-    api.create_new_post(this.user_id, content, this.fetchUser.bind(this));
+    api.create_new_post(this.props.session.token, content, this.fetchUser.bind(this));
   }
 
   render() {

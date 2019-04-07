@@ -8,10 +8,9 @@ function WallPosts(props) {
   let {posts, session, deleteCallback} = props;
 
   let onDelete = (id) => {
-    api.delete_post(id, deleteCallback);
+    api.delete_post(session.token, id, deleteCallback);
   };
 
-  // TODO add hyperlinks for posts
   let allPosts = _.map(posts, (p) => {
     let deleteButton;
       if (session && session.user_id == p.user_id) {
