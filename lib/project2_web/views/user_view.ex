@@ -6,14 +6,14 @@ defmodule Project2Web.UserView do
     %{data: render_many(users, UserView, "user.json")}
   end
 
-  def render("show.json", %{user: user, friend_info: friend_info}) do
-    render("user.json", %{user: user, friend_info: friend_info}) 
+  def render("show.json", %{user: user, friend_info: friend_info, weather_info: weather}) do
+    render("user.json", %{user: user, friend_info: friend_info, weather_info: weather}) 
   end
   def render("show.json", %{user: user}) do
     %{data: render_one(user, UserView, "user.json")}
   end
 
-  def render("user.json", %{user: user, friend_info: friend_info}) do
+  def render("user.json", %{user: user, friend_info: friend_info, weather_info: weather}) do
     posts = user.posts
     |> Enum.map(fn post -> %{id: post.id, content: post.content, user_id: post.user_id} end)
    
@@ -21,6 +21,7 @@ defmodule Project2Web.UserView do
       email: user.email,
       display_name: user.display_name,
       hometown: user.hometown,
+      weather_info: weather,
       points: user.points,
       posts: posts,
       is_friend: friend_info.is_friend,

@@ -84,6 +84,10 @@ class UserProfile extends React.Component {
         <div className="row">
           <div className="col-6">
             <h2>{this.state.display_name}</h2>
+            <div className="row">
+            <h4><font color="grey">From:</font> {this.state.hometown}</h4>
+            <h4 className="col text-right"><font color="grey">Current Weather:</font> {this.state.weather_info}</h4>
+            </div>
           </div>
           <div className="col-6">
             {friendStatus}
