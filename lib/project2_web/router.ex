@@ -37,8 +37,10 @@ defmodule Project2Web.Router do
     resources "/posts", PostController, except: [:new, :edit]
     resources "/replies", ReplyController, except: [:new, :edit]
     resources "/users", UserController, except: [:new, :edit]
+    delete "/friendrequests/:user_id", FriendRequestController, :delete
     post "/friendrequests/:user_id", FriendRequestController, :create    
     put "/friendrequests/:user_id", FriendRequestController, :update    
+    delete "/friends/:user_id", FriendController, :delete
     post "/auth", AuthController, :authenticate
   end
 end
