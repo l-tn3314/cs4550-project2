@@ -118,6 +118,22 @@ class TheServer {
       }, 
     });
   }
+  delete_friend(user_id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    $.ajax("/api/v1/friends/" + user_id, {
+      method: "delete",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      data: "",
+      success: (resp) => {
+        successCallback(resp);
+      },
+      error: (resp) => {
+        console.log("failed to delete friend");
+        console.log(resp);
+        errorCallback(resp);
+      }, 
+    });
+  }
 
   accept_friend_request(id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
     $.ajax("/api/v1/friendrequests/" + id, {
@@ -147,6 +163,23 @@ class TheServer {
       },
       error: (resp) => {
         console.log("failed to send friend request");
+        console.log(resp);
+        errorCallback(resp);
+      }, 
+    });
+  }
+
+  delete_friend_request(user_id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    $.ajax("/api/v1/friendrequests/" + user_id, {
+      method: "delete",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      data: "",
+      success: (resp) => {
+        successCallback(resp);
+      },
+      error: (resp) => {
+        console.log("failed to delete friend request");
         console.log(resp);
         errorCallback(resp);
       }, 

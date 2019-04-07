@@ -67,4 +67,11 @@ defmodule Project2Web.FriendRequestController do
       send_resp(conn, :no_content, "")
     end
   end
+  def delete(conn, %{"user_id" => user_id}) do
+    # TODO: replace with token verification?
+    current_user_id = get_session(conn, :user_id)
+    with {:ok, %FriendRequest{}} <- Friends.delete_friend_request_between(current_user_id, user_id) do
+      send_resp(conn, :no_content, "")
+    end 
+  end
 end
