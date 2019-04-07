@@ -13,7 +13,7 @@ class UserProfile extends React.Component {
     this.user_id = props.match.params.id;
   
     this.state = {
-      display_name: "loading",
+      display_name: <font color="white">"loading"</font>,
       new_post_content: ""
     }; 
   
@@ -76,11 +76,11 @@ class UserProfile extends React.Component {
     return <div>
         <div className="row">
           <div className="col-6">
-            <h2>{this.state.display_name}</h2>
+            <h2><font color="white">{this.state.display_name}</font></h2>
           </div>
           <div className="col-6">
             {friendStatus}
-            <i>Points: {this.state.points}</i>
+            <i><font color="white">Points: {this.state.points}</font></i>
           </div>
         </div>
         <div>

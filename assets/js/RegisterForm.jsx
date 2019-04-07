@@ -52,29 +52,29 @@ class RegisterForm  extends React.Component {
           </div>;
       }
       return <div>
-            <h2>Register Here!</h2>
+            <h2><font color="white">Register Here!</font></h2>
             {errmsg}
               <form action="javascript:void(0)" onSubmit={() => self.register()}>
                   <div className="form-group">
-                      <label htmlFor="display_name">Display Name</label>
+                      <label htmlFor="display_name"><font color="white">Display Name</font></label>
                       <input type="text" placeholder="John Smith" id="display_name"
                           className="form-control"
                           onChange={(ev) => self.update_register_form({display_name: ev.target.value})} />
                   </div>
                   <div className="form-group">
-                      <label htmlFor="email">Email Address</label>
+                      <label htmlFor="email"><font color="white">Email Address</font></label>
                       <input type="email" placeholder="john@example.com" id="email"
                           className="form-control"
                           onChange={(ev) => self.update_register_form({email: ev.target.value})} />
                   </div>
                   <div className="form-group">
-                      <label htmlFor="password">Password</label>
+                      <label htmlFor="password"><font color="white">Password</font></label>
                       <input type="password" id="password" placeholder="Enter password"
                           className="form-control"
                           onChange={(ev) => self.update_register_form({password: ev.target.value})} />
                   </div>
                   <div className="form-group">
-                      <label htmlFor="hometown">Hometown</label>
+                      <label htmlFor="hometown"><font color="white">Hometown</font></label>
                       <input type="text" id="hometown" placeholder="Boston, MA"
                           className="form-control"
                           onChange={(ev) => self.update_register_form({hometown: ev.target.value})} />
