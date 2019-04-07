@@ -12,7 +12,7 @@ defmodule Project2.Pokes.Poke do
   @doc false
   def changeset(poke, attrs) do
     poke
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:sender, :recipient])
+    |> validate_required([:sender, :recipient])
   end
 end

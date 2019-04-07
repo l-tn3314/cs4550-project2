@@ -44,6 +44,17 @@ class UserProfile extends React.Component {
     api.delete_friend(this.props.session.token, this.user_id, this.fetchUser.bind(this));
   }
 
+  pokeUser() {
+    let pokeSuccess = (resp) => {
+      this.props.setNotif({recipient_displayname: this.state.display_name}, 'POKE_SUCCESS');      
+    };
+
+    let pokeFail = (resp) => {
+      this.props.setNotif({recipient_displayname: this.state.display_name, msg: resp.responseJSON.error}, 'POKE_FAIL');
+    };
+    api.poke_user(this.props.session.token, this.user_id, pokeSuccess.bind(this), pokeFail.bind(this));
+  }
+
   // this should only be called if a user is on their own page
   createNewPost() {
     let content = this.state.new_post_content;
@@ -53,10 +64,13 @@ class UserProfile extends React.Component {
   }
 
   render() {
-    let friendStatus; 
+    let friendStatus;
     if (this.props.session && this.props.session.user_id != this.user_id) { 
       if (this.state.is_friend) {
-        friendStatus = <p>Friends! :)<button className="ml-2 btn btn-secondary" onClick={this.deleteFriend.bind(this)}>Unfriend :(</button></p>;
+        friendStatus = <div>
+          <button className="btn btn-danger" onClick={this.pokeUser.bind(this)}>Poke!</button>
+          <button className="ml-2 btn btn-secondary" onClick={this.deleteFriend.bind(this)}>Unfriend :(</button>
+        </div>;
       } else if (this.state.sent_request_to) {
         friendStatus = <p>Waiting for friend request to be accepted...<button className="ml-2 mr-2 btn btn-secondary" onClick={this.deleteFriendRequest.bind(this)}>Cancel friend request</button></p>;
       } else if (this.state.has_request_from) {
