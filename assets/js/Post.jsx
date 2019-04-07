@@ -35,12 +35,12 @@ class Post extends React.Component {
     let content = this.state.new_reply_content;
 
     this.updateState({new_reply_content: ""});
-    api.create_new_reply(this.props.session.user_id, this.post_id, content, this.fetchPost.bind(this));
+    api.create_new_reply(this.props.session.token, this.post_id, content, this.fetchPost.bind(this));
   }
 
 
   deleteReply(id) {
-    api.delete_reply(id, this.fetchPost.bind(this));
+    api.delete_reply(this.props.session.token, id, this.fetchPost.bind(this));
   }
 
   render() {

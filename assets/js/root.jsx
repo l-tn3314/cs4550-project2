@@ -4,6 +4,7 @@ import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
 import _ from 'lodash';
 import $ from 'jquery';
 
+import Header from './Header';
 import Notification from './Notification';
 import Post from './Post';
 import UserProfile from './UserProfile';
@@ -115,7 +116,7 @@ class Root extends React.Component {
     render() {
       return <Router>
         <div>
-          <Header session={this.state.session} root={this} />
+          <Header {...this.props} session={this.state.session} root={this} />
           {this.state.notification}
           <Route path="/users" exact={true} render={() =>
             <UserList users={this.state.users} />
@@ -147,59 +148,6 @@ class Root extends React.Component {
             }
         });
     }
-}
-
-function Header(props) {
-    let {root, session} = props;
-    let session_info;
-    if (session == null) {
-        session_info = <div className="form-inline my-2">
-            <form action="javascript:void(0)" onSubmit={() => root.login()}>
-            <input type="email" placeholder="email"
-        onChange={(ev) => root.update_login_form({email: ev.target.value})} />
-            <input type="password" placeholder="password"
-        onChange={(ev) => root.update_login_form({password: ev.target.value})} />
-            <button className="btn btn-secondary" type="submit">Login</button>
-            <br/>
-            {root.state.error || ""}
-            </form>
-            </div>;
-    } else {
-        let date = new Date().toLocaleTimeString();
-        session_info = <div className="my-2">
-            <div>
-            <p><font color="yellow">Logged in as </font><Link to={"/users/" + session.user_id}>{session.display_name}</Link></p>
-              <h3><font color="grey"><strong>At</strong>: </font> {date}</h3>
-            </div>
-            <Link to={"/edituser"}>Edit Profile</Link><br/>
-            <button className="btn btn-secondary" onClick={() => root.logout()}>Log Out</button>
-            </div>
-    }
-
-    let register_link = [];
-    let home_nav = [];
-    let users = [];
-    if (session == null) {
-        register_link = <Link to={"/register"}>Register</Link>;
-    } else {
-        users = <Link to={"/users"}>Users</Link>;
-    }
-        home_nav = <Link to={"/"}><h2>Pokester</h2></Link>;
-    return <div className="row my-2">
-        <div className="col-4">
-        {home_nav}
-        </div>
-        <div className="col-4">
-        {users}
-        <p>
-        &nbsp;
-        {register_link}
-        </p>
-        </div>
-        <div className="col-4">
-        {session_info}
-        </div>
-        </div>;
 }
 
 function UserList(props) {

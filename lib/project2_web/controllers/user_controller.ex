@@ -4,7 +4,6 @@ defmodule Project2Web.UserController do
   alias Project2.Users
   alias Project2.Users.User
   alias Project2.Friends
-  alias Project2.Friends.FriendRequest
 
   action_fallback Project2Web.FallbackController
 
@@ -28,14 +27,20 @@ defmodule Project2Web.UserController do
     friends = Friends.get_friend_ids_for(id)
     {req_sent_to, req_recv_from} = Friends.get_friend_requests_for(id)
 
-    # TODO: replace with token verification?
-    current_user_id = get_session(conn, :user_id)
-
-    friend_info = Map.put(%{}, :is_friend, Enum.member?(friends, current_user_id))
-    |> Map.put(:has_request_from, Enum.member?(req_sent_to, current_user_id))
-    |> Map.put(:sent_request_to, Enum.member?(req_recv_from, current_user_id))
-
-    render(conn, "show.json", user: user, friend_info: friend_info)
+    [token | _] = get_req_header(conn, "x-auth")
+    case Phoenix.Token.verify(Project2Web.Endpoint, "user_id", token, max_age: 86400) do
+      {:ok, user_id} ->
+        friend_info = Map.put(%{}, :is_friend, Enum.member?(friends, user_id))
+        |> Map.put(:has_request_from, Enum.member?(req_sent_to, user_id))
+        |> Map.put(:sent_request_to, Enum.member?(req_recv_from, user_id))
+        render(conn, "show.json", user: user, friend_info: friend_info)
+      {:error, _ } -> 
+        # user not logged in
+        friend_info = Map.put(%{}, :is_friend, nil)
+        |> Map.put(:has_request_from, nil)
+        |> Map.put(:sent_request_to, nil)
+        render(conn, "show.json", user: user, friend_info: friend_info)
+    end
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do

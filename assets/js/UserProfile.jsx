@@ -10,8 +10,6 @@ class UserProfile extends React.Component {
   constructor(props) {
     super(props);
 
-    this.user_id = props.match.params.id;
-  
     this.state = {
       display_name: "loading",
       new_post_content: ""
@@ -20,9 +18,16 @@ class UserProfile extends React.Component {
     this.fetchUser();  
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.params != this.props.match.params) {
+      this.fetchUser();
+    }
+  }
+
   fetchUser() {
     console.log("fetch user");
-    api.fetch_user(this.user_id, this.updateState.bind(this));
+    let token = this.props.session ? this.props.session.token : null;
+    api.fetch_user(token, this.props.match.params.id, this.updateState.bind(this));
   }
 
   updateState(state) {
@@ -30,11 +35,17 @@ class UserProfile extends React.Component {
   }
 
   acceptFriendRequest() {
-    api.accept_friend_request(this.user_id, this.fetchUser.bind(this));
+    api.accept_friend_request(this.props.session.token, this.props.match.params.id, this.fetchUser.bind(this));
   }
-
+  deleteFriendRequest() {
+    api.delete_friend_request(this.props.session.token, this.props.match.params.id, this.fetchUser.bind(this));
+  }
   sendFriendRequest() {
-    api.send_friend_request(this.user_id, this.fetchUser.bind(this));
+    api.send_friend_request(this.props.session.token, this.props.match.params.id, this.fetchUser.bind(this));
+  }
+  
+  deleteFriend() {
+    api.delete_friend(this.props.session.token, this.props.match.params.id, this.fetchUser.bind(this));
   }
 
   // this should only be called if a user is on their own page
@@ -42,26 +53,27 @@ class UserProfile extends React.Component {
     let content = this.state.new_post_content;
 
     this.updateState({new_post_content: ""});
-    api.create_new_post(this.user_id, content, this.fetchUser.bind(this));
+    api.create_new_post(this.props.session.token, content, this.fetchUser.bind(this));
   }
 
   render() {
+    let user_id = this.props.match.params.id;
     let friendStatus; 
-    if (this.props.session && this.props.session.user_id != this.user_id) { 
+    if (this.props.session && this.props.session.user_id != user_id) { 
       if (this.state.is_friend) {
-        friendStatus = <p>Friends! :)</p>
+        friendStatus = <p>Friends! :)<button className="ml-2 btn btn-secondary" onClick={this.deleteFriend.bind(this)}>Unfriend :(</button></p>;
       } else if (this.state.sent_request_to) {
-        friendStatus = <p>Waiting for friend request to be accepted...</p>
+        friendStatus = <p>Waiting for friend request to be accepted...<button className="ml-2 mr-2 btn btn-secondary" onClick={this.deleteFriendRequest.bind(this)}>Cancel friend request</button></p>;
       } else if (this.state.has_request_from) {
-        friendStatus = <button className="btn btn-primary" onClick={this.acceptFriendRequest.bind(this)}>Accept friend request!</button>
+        friendStatus = <div><button className="btn btn-primary" onClick={this.acceptFriendRequest.bind(this)}>Accept friend request!</button><button className="ml-2 mr-2 btn btn-secondary" onClick={this.deleteFriendRequest.bind(this)}>Decline</button></div>;
       } else {
-        friendStatus = <button className="btn btn-secondary" onClick={this.sendFriendRequest.bind(this)}>Send friend request</button>
+        friendStatus = <button className="mr-2 btn btn-primary" onClick={this.sendFriendRequest.bind(this)}>Send friend request</button>;
       }
     }
 
     let createPost;
 
-    if (this.props.session && this.props.session.user_id == this.user_id) {
+    if (this.props.session && this.props.session.user_id == user_id) {
       createPost = <div className="row">
           <div className="col-6 input-div">
             <input className="post-input" placeholder="What's on my mind..." value={this.state.new_post_content} onChange={(ev) => this.updateState({new_post_content: ev.target.value})} /> 

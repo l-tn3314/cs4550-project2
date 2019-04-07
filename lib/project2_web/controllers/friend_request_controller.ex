@@ -7,6 +7,8 @@ defmodule Project2Web.FriendRequestController do
 
   action_fallback Project2Web.FallbackController
 
+  plug Project2Web.Plugs.RequireAuth when action in [:create, :update, :delete]
+  
   def index(conn, _params) do
     friend_requests = Friends.list_friend_requests()
     render(conn, "index.json", friend_requests: friend_requests)
@@ -21,8 +23,7 @@ defmodule Project2Web.FriendRequestController do
     end
   end
   def create(conn, %{"user_id" => user_id}) do
-    # TODO: replace with token verification?
-    current_user_id = get_session(conn, :user_id)
+    current_user_id = conn.assigns.current_user.id
     with {:ok, %FriendRequest{} = friend_request} <- Friends.create_friend_request(%{"sender_id": current_user_id, "receiver_id": user_id}) do
       # user creating the friend request
       user = Users.get_user!(current_user_id)
@@ -47,8 +48,7 @@ defmodule Project2Web.FriendRequestController do
     end
   end
   def update(conn, %{"user_id" => user_id}) do
-    # TODO: replace with token verification?
-    current_user_id = get_session(conn, :user_id)
+    current_user_id = conn.assigns.current_user.id
     
     friend_request = Friends.get_user_friend_request(user_id, current_user_id)
     if friend_request do   
@@ -66,5 +66,11 @@ defmodule Project2Web.FriendRequestController do
     with {:ok, %FriendRequest{}} <- Friends.delete_friend_request(friend_request) do
       send_resp(conn, :no_content, "")
     end
+  end
+  def delete(conn, %{"user_id" => user_id}) do
+    current_user_id = conn.assigns.current_user.id
+    with {:ok, %FriendRequest{}} <- Friends.delete_friend_request_between(current_user_id, user_id) do
+      send_resp(conn, :no_content, "")
+    end 
   end
 end

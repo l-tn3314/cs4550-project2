@@ -6,6 +6,8 @@ defmodule Project2Web.FriendController do
 
   action_fallback Project2Web.FallbackController
 
+  plug Project2Web.Plugs.RequireAuth when action in [:create, :update, :delete]
+
   def index(conn, _params) do
     friends = Friends.list_friends()
     render(conn, "index.json", friends: friends)
@@ -39,5 +41,11 @@ defmodule Project2Web.FriendController do
     with {:ok, %Friend{}} <- Friends.delete_friend(friend) do
       send_resp(conn, :no_content, "")
     end
+  end
+  def delete(conn, %{"user_id" => user_id}) do
+    current_user_id = conn.assigns.current_user.id
+    with {:ok, %Friend{}} <- Friends.delete_friend(current_user_id, user_id) do
+      send_resp(conn, :no_content, "")
+    end 
   end
 end

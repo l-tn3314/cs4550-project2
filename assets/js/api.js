@@ -1,9 +1,10 @@
 class TheServer {
-  fetch_user(id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+  fetch_user(authToken, id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
     $.ajax("/api/v1/users/" + id, {
       method: "get",
       dataType: "json",
       contentType: "application/json; charset=UTF-8",
+      headers: {"X-AUTH": authToken},
       data: "",
       success: (resp) => {
         console.log("success!")
@@ -37,16 +38,15 @@ class TheServer {
     });
   }
   
-  // TODO token
-  create_new_post(user_id, content, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+  create_new_post(authToken, content, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
     let current_time = new Date().toISOString();
     $.ajax("/api/v1/posts/", {
       method: "post",
       dataType: "json",
       contentType: "application/json; charset=UTF-8",
+      headers: {"X-AUTH": authToken},
       data: JSON.stringify({
         post: {
-          user_id: user_id, 
           content: content,
           time: current_time,
         }
@@ -61,15 +61,15 @@ class TheServer {
       }, 
     });
   }
-  create_new_reply(user_id, post_id, content, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+  create_new_reply(authToken, post_id, content, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
     let current_time = new Date().toISOString();
     $.ajax("/api/v1/replies/", {
       method: "post",
       dataType: "json",
       contentType: "application/json; charset=UTF-8",
+      headers: {"X-AUTH": authToken},
       data: JSON.stringify({
         reply: {
-          user_id: user_id,
           post_id: post_id, 
           content: content,
           time: current_time,
@@ -86,11 +86,12 @@ class TheServer {
     });
   }
 
-  delete_post(post_id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+  delete_post(authToken, post_id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
     $.ajax("/api/v1/posts/" + post_id, {
       method: "delete",
       dataType: "json",
       contentType: "application/json; charset=UTF-8",
+      headers: {"X-AUTH": authToken},
       data: "",
       success: (resp) => {
         successCallback(resp);
@@ -102,11 +103,12 @@ class TheServer {
       }, 
     });
   }
-  delete_reply(reply_id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+  delete_reply(authToken, reply_id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
     $.ajax("/api/v1/replies/" + reply_id, {
       method: "delete",
       dataType: "json",
       contentType: "application/json; charset=UTF-8",
+      headers: {"X-AUTH": authToken},
       data: "",
       success: (resp) => {
         successCallback(resp);
@@ -118,12 +120,30 @@ class TheServer {
       }, 
     });
   }
+  delete_friend(authToken, user_id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    $.ajax("/api/v1/friends/" + user_id, {
+      method: "delete",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      headers: {"X-AUTH": authToken},
+      data: "",
+      success: (resp) => {
+        successCallback(resp);
+      },
+      error: (resp) => {
+        console.log("failed to delete friend");
+        console.log(resp);
+        errorCallback(resp);
+      }, 
+    });
+  }
 
-  accept_friend_request(id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+  accept_friend_request(authToken, id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
     $.ajax("/api/v1/friendrequests/" + id, {
       method: "put",
       dataType: "json",
       contentType: "application/json; charset=UTF-8",
+      headers: {"X-AUTH": authToken},
       data: "",
       success: (resp) => {
         successCallback(resp);
@@ -136,17 +156,36 @@ class TheServer {
     });
   }
 
-  send_friend_request(id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
-    $.ajax("/api/v1/friendrequests/" + id, {
+  send_friend_request(authToken, user_id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    $.ajax("/api/v1/friendrequests/" + user_id, {
       method: "post",
       dataType: "json",
       contentType: "application/json; charset=UTF-8",
+      headers: {"X-AUTH": authToken},
       data: "",
       success: (resp) => {
         successCallback(resp);
       },
       error: (resp) => {
         console.log("failed to send friend request");
+        console.log(resp);
+        errorCallback(resp);
+      }, 
+    });
+  }
+
+  delete_friend_request(authToken, user_id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    $.ajax("/api/v1/friendrequests/" + user_id, {
+      method: "delete",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      headers: {"X-AUTH": authToken},
+      data: "",
+      success: (resp) => {
+        successCallback(resp);
+      },
+      error: (resp) => {
+        console.log("failed to delete friend request");
         console.log(resp);
         errorCallback(resp);
       }, 
