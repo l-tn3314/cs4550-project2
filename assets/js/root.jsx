@@ -166,7 +166,7 @@ function Header(props) {
             </div>;
     } else {
         session_info = <div className="my-2">
-            <p><font color="yellow">Logged in as</font><font color="white"> {session.display_name}</font></p>
+            <p><font color="yellow">Logged in as </font>{session.display_name}</p>
             <Link to={"/edituser"}>Edit Profile</Link><br/>
             <button className="btn btn-secondary" onClick={() => root.logout()}>Log Out</button>
             </div>
