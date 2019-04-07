@@ -15,7 +15,7 @@ function WallPosts(props) {
   let allPosts = _.map(posts, (p) => {
     let deleteButton;
       if (session && session.user_id == p.user_id) {
-        deleteButton = <button className="btn btn-danger" onClick={() => onDelete(p.id)}>delete</button>
+        deleteButton = <button className="btn btn-danger ml-5" onClick={() => onDelete(p.id)}>delete</button>
       }
     return <div key={p.id}>
       <hr />

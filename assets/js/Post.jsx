@@ -47,20 +47,25 @@ class Post extends React.Component {
     let replies = _.reverse(_.map(this.state.data.replies, (r) => {
       let deleteButton;
       if (this.props.session && this.props.session.user_id == r.user_id) {
-        deleteButton = <button className="btn btn-danger" onClick={() => this.deleteReply(r.id)}>delete</button>
+        deleteButton = <button className="btn btn-danger ml-5" onClick={() => this.deleteReply(r.id)}>delete</button>
       }
 
       return <div key={r.id}>
         <b>{r.username}</b>: {r.content}
         {deleteButton}
+        <hr />
       </div>
     })); 
    
     let createReply; 
     if (this.props.session) {
-      createReply = <div>
-          <input type="text" placeholder="Reply..." value={this.state.new_reply_content} onChange={(ev) => this.updateState({new_reply_content: ev.target.value})} /> 
-          <button className="btn btn-primary" onClick={this.createNewReply.bind(this)}>Reply</button>
+      createReply = <div className="row">
+          <div className="col-6 input-div">
+            <input className="post-input" placeholder="Reply..." value={this.state.new_reply_content} onChange={(ev) => this.updateState({new_reply_content: ev.target.value})} /> 
+          </div>
+          <div className="col-2">
+            <button className="btn btn-primary" onClick={this.createNewReply.bind(this)}>Reply</button>
+          </div>
         </div>;
     }
     return <div>
@@ -68,7 +73,9 @@ class Post extends React.Component {
         <p>{this.state.data.content}</p>
         <hr />
         {replies}  
-        {createReply}
+        <div className="mt-2">
+          {createReply}
+        </div>
       </div>;
   }
 }
