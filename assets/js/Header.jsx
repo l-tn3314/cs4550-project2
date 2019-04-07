@@ -18,28 +18,26 @@ function Header(props) {
             </form>
             </div>;
     } else {
+        let date = new Date().toLocaleTimeString();
         session_info = <div className="my-2">
-              <p><font color="yellow">Logged in as </font>{session.display_name}
+              <div>
+                <p>
+                  <font color="yellow">Logged in as </font><Link to={"/users/" + session.user_id}>{session.display_name}</Link>
                 <button className="ml-5 btn btn-secondary btn-sm" onClick={() => root.logout()}>Log Out</button>
-              </p>
+                </p>
+                <font color="grey"><strong>At</strong>: </font> {date}
+              </div>
               <Link to={"/edituser"}>Edit Profile</Link>
             </div>;
     }
 
-    let register_link = [];
-    if (session == null) {
-        //register_link = <Link to={"/register"}>Register</Link>;
-    }
-
     return <div className="row my-2">
         <div className="col-4">
-            <Link to={"/"}><h1>Pokester</h1></Link>
+            <Link to={"/"}><h2>Pokester</h2></Link>
         </div>
         <div className="col-4">
             <p>
               <Link to={"/users"}>Users</Link>
-               &nbsp;
-              {register_link}
             </p>
         </div>
         <div className="col-4">

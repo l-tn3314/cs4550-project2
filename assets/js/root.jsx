@@ -149,7 +149,6 @@ class Root extends React.Component {
     }
 }
 
-
 function UserList(props) {
       let rows = _.map(props.users, (uu) => <User key={uu.id} user={uu} />);
       return <div className="row">
@@ -157,8 +156,7 @@ function UserList(props) {
               <table className="table table-striped">
                 <thead>
                   <tr>
-                    <th>email</th>
-                    <th>display name</th>
+                    <th>Display Name</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -172,7 +170,8 @@ function UserList(props) {
 function User(props) {
       let {user} = props;
       return <tr>
-            <td>{user.email}</td>
-            <td>{user.display_name}</td>
+        <td>
+            <Link to={"/users/" + user.id}><p>{user.display_name}</p></Link>
+        </td>
           </tr>;
 }
