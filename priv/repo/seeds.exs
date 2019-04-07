@@ -16,10 +16,10 @@ alias Project2.Users.User
 
 pwhash = Argon2.hash_pwd_salt("password")
 
-Repo.insert!(%User{email: "alice@example.com", display_name: "alice", password_hash: pwhash, hometown: "San Bernadino, US", pw_last_try: DateTime.truncate(DateTime.utc_now(), :second)})
+Repo.insert!(%User{email: "alice@example.com", display_name: "alice", password_hash: pwhash, hometown: "Lynn, US", pw_last_try: DateTime.truncate(DateTime.utc_now(), :second)})
 Repo.insert!(%User{email: "bob@example.com", display_name: "bobby", password_hash: pwhash, hometown: "Boston, US", pw_last_try: DateTime.truncate(DateTime.utc_now(), :second)})
 Repo.insert!(%User{email: "cal@example.com", display_name: "cal", password_hash: pwhash, hometown: "Boston, US", pw_last_try: DateTime.truncate(DateTime.utc_now(), :second)})
-Repo.insert!(%User{email: "dee@example.com", display_name: "dee", password_hash: pwhash, hometown: "New York, US", pw_last_try: DateTime.truncate(DateTime.utc_now(), :second)})
+Repo.insert!(%User{email: "dee@example.com", display_name: "dee", password_hash: pwhash, hometown: "Salem, US", pw_last_try: DateTime.truncate(DateTime.utc_now(), :second)})
 Repo.insert!(%User{email: "eni@example.com", display_name: "eni", password_hash: pwhash, hometown: "Atlanta, US", pw_last_try: DateTime.truncate(DateTime.utc_now(), :second)})
 
 alias Project2.Friends.Friend

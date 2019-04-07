@@ -39,6 +39,7 @@ defmodule Project2Web.Router do
     resources "/users", UserController, except: [:new, :edit]
     post "/friendrequests/:user_id", FriendRequestController, :create    
     put "/friendrequests/:user_id", FriendRequestController, :update    
+    post "/pokes/:user_id", PokeController, :create    
     post "/auth", AuthController, :authenticate
   end
 end

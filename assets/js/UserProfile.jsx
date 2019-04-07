@@ -37,6 +37,10 @@ class UserProfile extends React.Component {
     api.send_friend_request(this.user_id, this.fetchUser.bind(this));
   }
 
+  pokeUser() {
+      api.poke_user(this.user_id, this.fetchUser.bind(this));
+  }
+
   // this should only be called if a user is on their own page
   createNewPost() {
     let content = this.state.new_post_content;
@@ -46,10 +50,10 @@ class UserProfile extends React.Component {
   }
 
   render() {
-    let friendStatus; 
+    let friendStatus;
     if (this.props.session && this.props.session.user_id != this.user_id) { 
       if (this.state.is_friend) {
-        friendStatus = <p>Friends! :)</p>
+        friendStatus = <button className="btn btn-danger" onClick={this.pokeUser.bind(this)}>Poke!</button>//<p>Friends! :)</p>
       } else if (this.state.sent_request_to) {
         friendStatus = <p>Waiting for friend request to be accepted...</p>
       } else if (this.state.has_request_from) {

@@ -11,9 +11,10 @@ defmodule Project2Web.PokeController do
     render(conn, "index.json", pokes: pokes)
   end
 
-  def create(conn, %{"poke" => poke_params}) do
+#  def create(conn, %{"poke" => poke_params}) do
+  def create(conn, %{"user_id" => user_id}) do
       user = Project2.Users.get_user!(get_session(conn, :user_id))
-
+      current_user_id = get_session(conn, :user_id) 
       arr = String.split(user.hometown, ",")
 
       city = Enum.at(arr, 0)
@@ -25,6 +26,7 @@ defmodule Project2Web.PokeController do
       {:ok, response} = HTTPoison.get(url, [], [])
       json = Poison.decode!(response.body)
 
+# slight bug when performing api call on a city that contains a space
       weather = Enum.at(json["weather"], 0)["main"]
       accuracy = Enum.random(1..100)
 
@@ -32,11 +34,15 @@ defmodule Project2Web.PokeController do
           (weather == "Clouds" and accuracy > 20) or 
           (weather == "Rain" and accuracy > 50) or 
           (weather == "Snow" and accuracy > 80) do
-          with {:ok, %Poke{} = poke} <- Pokes.create_poke(poke_params) do
+          with {:ok, %Poke{} = poke} <- Pokes.create_poke(%{"sender": current_user_id, "recipient": user_id}) do
             Project2Web.Endpoint.broadcast!("notifications:lobby", "poke", %{from: poke.sender, to: poke.recipient})
+            new_points = user.points + 100
+            Project2.Users.update_user(user, %{points: new_points})
             create(conn, poke)
           end
       else
+          new_points = user.points - 100
+          Project2.Users.update_user(user, %{points: new_points})
           conn
           |> put_flash(:info, "Poke Failed Due to Inclement Weather...")
       end

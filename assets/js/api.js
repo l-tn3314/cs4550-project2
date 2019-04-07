@@ -153,6 +153,23 @@ class TheServer {
     });
   }
 
+  poke_user(id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    $.ajax("/api/v1/pokes/" + id, {
+      method: "post",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      data: "",
+      success: (resp) => {
+        successCallback(resp);
+      },
+      error: (resp) => {
+        console.log("failed to poke");
+        console.log(resp);
+        errorCallback(resp);
+      }, 
+    });
+  }
+
   register_user(display_name, email, password, hometown) {
      $.ajax("/api/v1/users", {
          method: "post",
