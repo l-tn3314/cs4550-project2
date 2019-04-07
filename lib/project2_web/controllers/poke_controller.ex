@@ -6,13 +6,15 @@ defmodule Project2Web.PokeController do
 
   action_fallback Project2Web.FallbackController
 
+  plug Project2Web.Plugs.RequireAuth when action in [:create, :update, :delete]
+  
   def index(conn, _params) do
     pokes = Pokes.list_pokes()
     render(conn, "index.json", pokes: pokes)
   end
 
   def create(conn, %{"poke" => poke_params}) do
-      user = Project2.Users.get_user!(get_session(conn, :user_id))
+      user = Project2.Users.get_user!(conn.assigns.current_user_id)
 
       arr = String.split(user.hometown, ",")
 
