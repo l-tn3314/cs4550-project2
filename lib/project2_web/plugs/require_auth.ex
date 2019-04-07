@@ -5,6 +5,7 @@ defmodule Project2Web.Plugs.RequireAuth do
 
   def call(conn, _args) do
     [token | _] = get_req_header(conn, "x-auth")
+
     case Phoenix.Token.verify(Project2Web.Endpoint, "user_id", token, max_age: 86400) do
       {:ok, user_id} ->
         assign(conn, :current_user, Project2.Users.get_user!(user_id))

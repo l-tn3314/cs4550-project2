@@ -12,12 +12,6 @@ import RegisterForm from './RegisterForm';
 import EditUserForm from './EditUserForm';
 
 export default function root_init(node, channel) {
-    let element = (
-        <div>
-          <h1>Hello, world!</h1>
-          <h2>It is {new Date().toLocaleTimeString()}.</h2>
-        </div>
-    );
     ReactDOM.render(<Root channel={channel} />, node);
 }
 
@@ -50,6 +44,11 @@ class Root extends React.Component {
           this.setNotif(payload, "FRIEND_REQUEST");
         };
         this.channel.on("friend_request", friendRequestNotif.bind(this));
+
+        let pokeNotif = (payload) => {
+            this.setNotif(payload, "POKE");
+        };
+        this.channel.on("poke", pokeNotif.bind(this));
 
     }
    
@@ -122,7 +121,7 @@ class Root extends React.Component {
             <UserList users={this.state.users} />
           } />
           <Route path="/users/:id" render={(props) => 
-            <UserProfile {...props} session={this.state.session} />
+            <UserProfile {...props} session={this.state.session} setNotif={this.setNotif.bind(this)} />
           } />
           <Route path="/posts/:id" render={(props) =>
             <Post {...props} session={this.state.session} />
