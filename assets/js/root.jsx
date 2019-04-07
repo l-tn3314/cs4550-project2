@@ -82,6 +82,7 @@ class Root extends React.Component {
                 localStorage["project2_session"] = JSON.stringify(resp.data);
                 let state1 = _.assign({}, this.state, { session: resp.data, error: null });
                 this.setState(state1);
+                window.location.href = "/users/" + this.state.session.user_id;
 
                 if (this.state.channelJoined) {
                     // if already joined channle, just subscribe
@@ -104,7 +105,8 @@ class Root extends React.Component {
     logout() {
         delete localStorage["project2_session"];
         let state1 = _.assign({}, this.state, {session:null});
-        this.setState(state1);
+        this.setState(state1);    
+        window.location.href = "/";
         
         // unsubscribe after logging out
         this.channel.push("unsubscribe", {});
@@ -164,7 +166,7 @@ function Header(props) {
             </div>;
     } else {
         session_info = <div className="my-2">
-            <p>Logged in as {session.display_name}</p>
+            <p><font color="yellow">Logged in as </font>{session.display_name}</p>
             <Link to={"/edituser"}>Edit Profile</Link><br/>
             <button className="btn btn-secondary" onClick={() => root.logout()}>Log Out</button>
             </div>
@@ -177,7 +179,7 @@ function Header(props) {
 
     return <div className="row my-2">
         <div className="col-4">
-            <Link to={"/"}><h1>Project2</h1></Link>
+            <Link to={"/"}><h1>Pokester</h1></Link>
         </div>
         <div className="col-4">
         <p>
