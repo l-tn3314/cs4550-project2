@@ -115,7 +115,7 @@ class Root extends React.Component {
     render() {
       return <Router>
         <div>
-          <Header {...this.props} session={this.state.session} root={this} />
+          <Header session={this.state.session} root={this} />
           {this.state.notification}
           <Route path="/users" exact={true} render={() =>
             <UserList users={this.state.users} />
