@@ -43,6 +43,14 @@ defmodule Project2.Friends do
     |> Enum.map(fn req -> delete_friend_request(req) end)
   end
 
+  def delete_friend_request_between(user1_id, user2_id) do
+    friend_request_query = from f in FriendRequest,
+      where: (f.sender_id == ^user1_id and f.receiver_id == ^user2_id)
+        or (f.sender_id == ^user2_id and f.receiver_id == ^user1_id)
+    Repo.one(friend_request_query)
+    |> delete_friend_request
+  end
+
   @doc """
   Gets a single friend_request.
 
@@ -237,6 +245,14 @@ defmodule Project2.Friends do
   """
   def delete_friend(%Friend{} = friend) do
     Repo.delete(friend)
+  end
+  def delete_friend(user1_id, user2_id) do
+    lower_user_id = min(user1_id, user2_id)
+    higher_user_id = max(user1_id, user2_id)
+    friend_query = from f in Friend,
+      where: f.lower_user_id == ^lower_user_id and f.higher_user_id == ^higher_user_id
+    Repo.one(friend_query)
+    |> delete_friend
   end
 
   @doc """

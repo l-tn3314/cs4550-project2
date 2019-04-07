@@ -32,9 +32,15 @@ class UserProfile extends React.Component {
   acceptFriendRequest() {
     api.accept_friend_request(this.user_id, this.fetchUser.bind(this));
   }
-
+  deleteFriendRequest() {
+    api.delete_friend_request(this.user_id, this.fetchUser.bind(this));
+  }
   sendFriendRequest() {
     api.send_friend_request(this.user_id, this.fetchUser.bind(this));
+  }
+  
+  deleteFriend() {
+    api.delete_friend(this.user_id, this.fetchUser.bind(this));
   }
 
   pokeUser() {
@@ -53,13 +59,16 @@ class UserProfile extends React.Component {
     let friendStatus;
     if (this.props.session && this.props.session.user_id != this.user_id) { 
       if (this.state.is_friend) {
-        friendStatus = <button className="btn btn-danger" onClick={this.pokeUser.bind(this)}>Poke!</button>//<p>Friends! :)</p>
+        friendStatus = <div>
+          <button className="btn btn-danger" onClick={this.pokeUser.bind(this)}>Poke!</button>
+          <button className="ml-2 btn btn-secondary" onClick={this.deleteFriend.bind(this)}>Unfriend :(</button>
+        </div>;
       } else if (this.state.sent_request_to) {
-        friendStatus = <p>Waiting for friend request to be accepted...</p>
+        friendStatus = <p>Waiting for friend request to be accepted...<button className="ml-2 mr-2 btn btn-secondary" onClick={this.deleteFriendRequest.bind(this)}>Cancel friend request</button></p>;
       } else if (this.state.has_request_from) {
-        friendStatus = <button className="btn btn-primary" onClick={this.acceptFriendRequest.bind(this)}>Accept friend request!</button>
+        friendStatus = <div><button className="btn btn-primary" onClick={this.acceptFriendRequest.bind(this)}>Accept friend request!</button><button className="ml-2 mr-2 btn btn-secondary" onClick={this.deleteFriendRequest.bind(this)}>Decline</button></div>;
       } else {
-        friendStatus = <button className="btn btn-secondary" onClick={this.sendFriendRequest.bind(this)}>Send friend request</button>
+        friendStatus = <button className="mr-2 btn btn-primary" onClick={this.sendFriendRequest.bind(this)}>Send friend request</button>;
       }
     }
 
