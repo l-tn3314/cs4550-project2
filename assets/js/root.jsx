@@ -166,7 +166,10 @@ function Header(props) {
             </div>;
     } else {
         session_info = <div className="my-2">
+            <div>
             <p><font color="yellow">Logged in as </font>{session.display_name}</p>
+              <h3><font color="grey"><strong>At</strong>: </font> {new Date().toLocaleTimeString()}</h3>
+            </div>
             <Link to={"/edituser"}>Edit Profile</Link><br/>
             <button className="btn btn-secondary" onClick={() => root.logout()}>Log Out</button>
             </div>
@@ -177,9 +180,11 @@ function Header(props) {
         register_link = <Link to={"/register"}>Register</Link>;
     }
 
+    if (session == null) {
     return <div className="row my-2">
         <div className="col-4">
             <Link to={"/"}><h1>Pokester</h1></Link>
+        
         </div>
         <div className="col-4">
         <p>
@@ -192,6 +197,23 @@ function Header(props) {
         {session_info}
         </div>
         </div>;
+    } else {
+        return <div className="row my-2">
+          <div className="col-4">
+            <Link to={"/users/" + session.user_id}><h1>Pokester</h1></Link>
+          </div>
+          <div className="col-4">
+          <p>
+          <Link to={"/users"}>Users</Link>
+          &nbsp;
+          {register_link}
+          </p>
+          </div>
+          <div className="col-4">
+          {session_info}
+          </div>
+          </div>;
+    }
 }
 
 function UserList(props) {
@@ -201,7 +223,6 @@ function UserList(props) {
               <table className="table table-striped">
                 <thead>
                   <tr>
-                    <th>email</th>
                     <th>display name</th>
                   </tr>
                 </thead>
@@ -216,7 +237,6 @@ function UserList(props) {
 function User(props) {
       let {user} = props;
       return <tr>
-            <td>{user.email}</td>
             <td>{user.display_name}</td>
           </tr>;
 }
