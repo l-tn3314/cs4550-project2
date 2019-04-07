@@ -121,7 +121,7 @@ class Root extends React.Component {
             <UserList users={this.state.users} />
           } />
           <Route path="/users/:id" render={(props) => 
-            <UserProfile {...props} session={this.state.session} />
+            <UserProfile {...props} session={this.state.session} setNotif={this.setNotif.bind(this)} />
           } />
           <Route path="/posts/:id" render={(props) =>
             <Post {...props} session={this.state.session} />

@@ -45,7 +45,14 @@ class UserProfile extends React.Component {
   }
 
   pokeUser() {
-      api.poke_user(this.user_id, this.fetchUser.bind(this));
+    let pokeSuccess = (resp) => {
+      this.props.setNotif({recipient_displayname: this.state.display_name}, 'POKE_SUCCESS');      
+    };
+
+    let pokeFail = (resp) => {
+      this.props.setNotif({recipient_displayname: this.state.display_name, msg: resp.responseJSON.error}, 'POKE_FAIL');
+    };
+    api.poke_user(this.props.session.token, this.user_id, pokeSuccess.bind(this), pokeFail.bind(this));
   }
 
   // this should only be called if a user is on their own page

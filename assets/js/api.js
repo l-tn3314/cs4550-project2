@@ -174,23 +174,6 @@ class TheServer {
     });
   }
 
-  poke_user(id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
-    $.ajax("/api/v1/pokes/" + id, {
-      method: "post",
-      dataType: "json",
-      contentType: "application/json; charset=UTF-8",
-      data: "",
-      success: (resp) => {
-        successCallback(resp);
-      },
-      error: (resp) => {
-        console.log("failed to poke");
-        console.log(resp);
-        errorCallback(resp);
-      }, 
-    });
-  }
-
   delete_friend_request(authToken, user_id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
     $.ajax("/api/v1/friendrequests/" + user_id, {
       method: "delete",
@@ -203,6 +186,24 @@ class TheServer {
       },
       error: (resp) => {
         console.log("failed to delete friend request");
+        console.log(resp);
+        errorCallback(resp);
+      }, 
+    });
+  }
+
+  poke_user(authToken, user_id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    $.ajax("/api/v1/pokes/" + user_id, {
+      method: "post",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      headers: {"X-AUTH": authToken},
+      data: "",
+      success: (resp) => {
+        successCallback(resp);
+      },
+      error: (resp) => {
+        console.log("failed to poke");
         console.log(resp);
         errorCallback(resp);
       }, 
