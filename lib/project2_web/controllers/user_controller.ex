@@ -24,6 +24,18 @@ defmodule Project2Web.UserController do
 
   def show(conn, %{"id" => id}) do
     user = Users.get_user(id)
+    arr = String.split(user.hometown, ",")
+
+    city = Enum.at(arr, 0)
+    country_code = String.trim(Enum.at(arr, 1))
+
+    api_key = "e6d0c89e30239fe1489387d434108f24"
+    url = "api.openweathermap.org/data/2.5/weather?q=#{city},#{country_code}&appid=#{api_key}"
+
+    {:ok, response} = HTTPoison.get(url, [], [])
+    json = Poison.decode!(response.body)
+
+    weather = Enum.at(json["weather"], 0)["main"]
     friends = Friends.get_friend_ids_for(id)
     {req_sent_to, req_recv_from} = Friends.get_friend_requests_for(id)
 
@@ -33,13 +45,13 @@ defmodule Project2Web.UserController do
         friend_info = Map.put(%{}, :is_friend, Enum.member?(friends, user_id))
         |> Map.put(:has_request_from, Enum.member?(req_sent_to, user_id))
         |> Map.put(:sent_request_to, Enum.member?(req_recv_from, user_id))
-        render(conn, "show.json", user: user, friend_info: friend_info)
+        render(conn, "show.json", user: user, friend_info: friend_info, weather_info: weather)
       {:error, _ } -> 
         # user not logged in
         friend_info = Map.put(%{}, :is_friend, nil)
         |> Map.put(:has_request_from, nil)
         |> Map.put(:sent_request_to, nil)
-        render(conn, "show.json", user: user, friend_info: friend_info)
+        render(conn, "show.json", user: user, friend_info: friend_info, weather_info: weather)
     end
   end
 
