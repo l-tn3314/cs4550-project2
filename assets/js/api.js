@@ -210,26 +210,52 @@ class TheServer {
     });
   }
 
-  register_user(display_name, email, password, hometown) {
-     $.ajax("/api/v1/users", {
-         method: "post",
-         dataType: "json",
-         contentType: "application/json; charset=UTF-8",
-         data: {"user": {display_name, email, password, hometown}},
-         success:
-          (resp) => {
-            this.fetch_user();
-            store.dispatch({
-              type: 'REGISTERED',
-            });
-          },
-         error: (resp) => {
-             this.fetch_user();
-             store.dispatch({
-                 type: "REGISTER_ERROR",
-             });
-         }
-     });
+  register_user(display_name, email, password, hometown, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    $.ajax("/api/v1/users", {
+      method: "post",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      data: JSON.stringify({"user": {display_name, email, password, hometown}}),
+      success: (resp) => {
+        successCallback(resp);
+      },
+      error: (resp) => {
+        console.log("failed to reigster user");
+        errorCallback(resp);
+      }
+    });
+  }
+    
+  delete_user(authToken, id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    $.ajax("/api/v1/users/" + id, {
+      method: "delete",
+      headers: {"X-AUTH": authToken},
+      success: (resp) => {
+        successCallback(resp);       
+      },
+      error: (resp) => {
+        errorCallback(resp);
+      }
+    });
+  }
+  
+  update_user(authToken, id, user_params, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    $.ajax("/api/v1/users/" + id, {
+      method: "patch",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      headers: {"X-AUTH": authToken},
+      data: JSON.stringify({"user": user_params}),
+      success: (resp) => {
+        console.log("update success");
+        successCallback(resp);
+      },
+      error: (resp) => {
+        console.log("update user failed");
+        console.log(resp);
+        errorCallback(resp);
+      }
+   });
   }
 
   create_session(display_name, email, password, hometown) {

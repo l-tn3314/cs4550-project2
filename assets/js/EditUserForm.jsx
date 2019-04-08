@@ -11,6 +11,7 @@ class EditUserForm  extends React.Component {
     this.state = {
         user_id: props.user_id,
         error: false,
+        errorMsg: "",
         edited: false,
         display_name: "Loading",
         email: "Loading",
@@ -20,27 +21,10 @@ class EditUserForm  extends React.Component {
   }
 
   componentDidMount() {
-      this.get_user();
-  }
-
-  get_user() {
-      let self = this;
-      $.ajax("/api/v1/users/" + this.state.user_id, {
-          dataType: "json",
-          method: "get",
-          contentType: "application/json; charset=UTF-8",
-          success: (resp) => {
-              self.setState({
-                  display_name: resp.display_name,
-                  email: resp.email,
-                  hometown: resp.hometown
-              })
-          }
-      });
+      api.fetch_user(this.props.session.token, this.props.session.user_id, this.update_edit_form.bind(this))
   }
 
   edit() {
-    let self = this;
     let display_name = this.state.display_name;
     let email = this.state.email;
     let password = this.state.password;
@@ -49,19 +33,16 @@ class EditUserForm  extends React.Component {
     if (password != "") {
       new_obj.password = password;
     }
-    $.ajax("/api/v1/users/" + this.state.user_id, {
-         method: "patch",
-         dataType: "json",
-         contentType: "application/json; charset=UTF-8",
-         data: JSON.stringify({"user": new_obj}),
-         success:
-          (resp) => {
-              self.setState({edited: true, error: false});
-          },
-         error: (resp) => {
-             self.setState({error: true});
-         }
-     });
+    
+    let successFunc = (resp) => {
+      this.setState({edited: true, error: false});
+    };
+    let errorFunc = (resp) => {
+      let msg = resp.responseText;
+      this.setState({error: true, errorMsg: msg});
+    };
+  
+    api.update_user(this.props.session.token, this.props.session.user_id, new_obj, successFunc.bind(this), errorFunc.bind(this));
   }
 
   update_edit_form(state) {
@@ -74,18 +55,15 @@ class EditUserForm  extends React.Component {
   }
 
   actually_delete() {
-    let self = this;
-    $.ajax("/api/v1/users/" + this.state.user_id, {
-         method: "delete",
-         success:
-          (resp) => {
-              self.setState({redirect: true});
-              self.state.logout_func();
-          },
-         error: (resp) => {
-             self.setState({error: true});
-         }
-     });
+    let successFunc = (resp) => {
+      this.setState({redirect: true});
+      this.props.logout();
+    };
+    let errorFunc = (resp) => {
+      this.setState({error: true});
+    };
+   
+    api.delete_user(this.props.session.token, this.props.session.user_id, successFunc.bind(this), errorFunc.bind(this));
   }
 
   render() {
@@ -96,7 +74,7 @@ class EditUserForm  extends React.Component {
       let msg = [];
       if (this.state.error) {
           msg = <div className="alert alert-danger" role="alert">
-              Error registering user
+              {this.state.errorMsg}
           </div>;
       } else if (this.state.edited) {
           msg = <div className="alert alert-info" role="alert">
@@ -108,14 +86,14 @@ class EditUserForm  extends React.Component {
       if (this.state.confirm_delete) {
         confirm_delete = <div>
             <h3> Are you sure?</h3>
-            <button type="button" className="btn btn-danger" onClick={() => self.actually_delete()}>Confirm Account Deletion</button>
+            <button type="button" className="btn btn-danger" onClick={this.actually_delete.bind(this)}>Confirm Account Deletion</button>
         </div>;
       }
 
       return <div>
             <h2>Edit Profile</h2>
             {msg}
-              <form action="javascript:void(0)" onSubmit={() => self.edit()}>
+              <form action="javascript:void(0)" onSubmit={this.edit.bind(this)}>
                   <div className="form-group">
                       <label htmlFor="display_name">Display Name</label>
                       <input type="text" placeholder="John Smith" id="display_name" value={this.state.display_name}
@@ -136,7 +114,7 @@ class EditUserForm  extends React.Component {
                   </div>
                   <div className="form-group">
                       <label htmlFor="hometown">Hometown</label>
-                      <input type="text" id="hometown" placeholder="Boston, MA" value={this.state.hometown}
+                      <input type="text" id="hometown" placeholder="Boston, US" value={this.state.hometown}
                           className="form-control"
                           onChange={(ev) => self.update_edit_form({hometown: ev.target.value})} />
                   </div>
