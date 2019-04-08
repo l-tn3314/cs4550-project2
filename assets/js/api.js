@@ -231,6 +231,35 @@ class TheServer {
          }
      });
   }
+    
+  delete_user(authToken, id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    $.ajax("/api/v1/users/" + id, {
+      method: "delete",
+      headers: {"X-AUTH": authToken},
+      success: (resp) => {
+        successCallback(resp);       
+      },
+      error: (resp) => {
+        errorCallback(resp);
+      }
+    });
+  }
+  
+  update_user(authToken, id, user_params, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    $.ajax("/api/v1/users/" + id, {
+      method: "patch",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      headers: {"X-AUTH": authToken},
+      data: JSON.stringify({"user": user_params}),
+      success: (resp) => {
+        successCallback(resp);
+      },
+      error: (resp) => {
+        errorCallback(resp);
+      }
+   });
+  }
 
   create_session(display_name, email, password, hometown) {
     this.send_post(

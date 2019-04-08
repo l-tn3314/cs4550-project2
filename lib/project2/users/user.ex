@@ -16,11 +16,14 @@ defmodule Project2.Users.User do
     timestamps()
   end
 
+  # api validation here?
+
   @doc false
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:email, :display_name, :password_hash, :points, :hometown, :pw_last_try])
     |> validate_required([:email, :display_name, :password_hash, :points, :hometown, :pw_last_try])
+    |> validate_format(:email, ~r/@/)
     |> unique_constraint(:email)
   end
 end

@@ -128,7 +128,7 @@ class Root extends React.Component {
           } />
           <Route path="/register" component={RegisterForm} />
           <Route path="/edituser" render={() =>
-                  <EditUserForm logout={this.logout.bind(this)} user_id={this.state.session && this.state.session.user_id || 0} />
+                  <EditUserForm logout={this.logout.bind(this)} session={this.state.session} user_id={this.state.session && this.state.session.user_id || 0} />
           } />
 
         </div>

@@ -7,6 +7,8 @@ defmodule Project2Web.UserController do
 
   action_fallback Project2Web.FallbackController
 
+  plug Project2Web.Plugs.RequireAuth when action in [:update, :delete]
+
   def index(conn, _params) do
     users = Users.list_users()
     render(conn, "index.json", users: users)
@@ -56,18 +58,29 @@ defmodule Project2Web.UserController do
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
-    user = Users.get_user!(id)
+    if String.to_integer(id) == conn.assigns.current_user.id do 
+      user = Users.get_user!(id)
 
-    with {:ok, %User{} = user} <- Users.update_user(user, user_params) do
-      render(conn, "show.json", user: user)
+      with {:ok, %User{} = user} <- Users.update_user(user, user_params) do
+        render(conn, "show.json", user: user)
+      end
+    else 
+      conn 
+      |> put_resp_header("content-type", "application/json; charset=UTF-8")
+      |> send_resp(:unprocessable_entity, Jason.encode!(%{"error" => "not authorized!"}) )
     end
   end
 
   def delete(conn, %{"id" => id}) do
-    user = Users.get_user!(id)
-
-    with {:ok, %User{}} <- Users.delete_user(user) do
-      send_resp(conn, :no_content, "")
+    if String.to_integer(id) == conn.assigns.current_user.id do 
+      user = Users.get_user!(id)
+      with {:ok, %User{}} <- Users.delete_user(user) do
+        send_resp(conn, :no_content, "")
+      end
+    else 
+      conn 
+      |> put_resp_header("content-type", "application/json; charset=UTF-8")
+      |> send_resp(:unprocessable_entity, Jason.encode!(%{"error" => "not authorized!"}) )
     end
   end
 end

@@ -3,8 +3,8 @@ defmodule Project2.Repo.Migrations.CreatePokes do
 
   def change do
     create table(:pokes) do
-      add :sender, references(:users, on_delete: :nothing), null: false
-      add :recipient, references(:users, on_delete: :nothing), null: false
+      add :sender, references(:users, on_delete: :delete_all), null: false
+      add :recipient, references(:users, on_delete: :delete_all), null: false
 
       timestamps()
     end
