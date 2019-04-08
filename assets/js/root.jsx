@@ -132,6 +132,7 @@ class Root extends React.Component {
           } />
 
         </div>
+            <img id="unicorn" src='/images/unicorn.png' />
       </Router>;
     }
 

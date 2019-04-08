@@ -1,0 +1,17 @@
+[Unit]
+Description=Pokester Webapp
+
+[Service]
+Type=simple
+User=pokester
+Group=pokester
+Restart=on-failure
+Environment=MIX_ENV=prod "PORT=4995"
+Environment=LANG=en_US.UTF-8
+
+WorkingDirectory=/home/pokester/pokester
+ExecStart=/home/pokester/pokester/start.sh
+
+[Install]
+WantedBy=multi-user.target
+
