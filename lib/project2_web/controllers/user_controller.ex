@@ -28,7 +28,7 @@ defmodule Project2Web.UserController do
     user = Users.get_user(id)
     arr = String.split(user.hometown, ",")
 
-    city = Enum.at(arr, 0)
+    city = String.trim(Enum.at(arr, 0))
     country_code = String.trim(Enum.at(arr, 1))
 
     api_key = "e6d0c89e30239fe1489387d434108f24"
@@ -36,7 +36,7 @@ defmodule Project2Web.UserController do
 
     {:ok, response} = HTTPoison.get(url, [], [])
     json = Poison.decode!(response.body)
-
+  
     weather = Enum.at(json["weather"], 0)["main"]
     friends = Friends.get_friend_ids_for(id)
     {req_sent_to, req_recv_from} = Friends.get_friend_requests_for(id)

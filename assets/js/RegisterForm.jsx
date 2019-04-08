@@ -10,29 +10,25 @@ class RegisterForm  extends React.Component {
 
     this.state = {
         error: false,
-        registered: false
+        registered: false,
+        errorMsg: "",
     };
   }
 
   register() {
-    let self = this;
     let display_name = this.state.display_name;
     let email = this.state.email;
     let password = this.state.password;
     let hometown = this.state.hometown;
-     $.ajax("/api/v1/users", {
-         method: "post",
-         dataType: "json",
-         contentType: "application/json; charset=UTF-8",
-         data: JSON.stringify({"user": {display_name, email, password, hometown}}),
-         success:
-          (resp) => {
-              self.setState({registered: true});
-          },
-         error: (resp) => {
-             self.setState({error: true});
-         }
-     });
+    let successFunc = (resp) => {
+      this.setState({registered: true, error: false});
+    };
+    let errorFunc = (resp) => {
+      let msg = !password ? "password cannot be blank" : resp.responseText;
+      this.setState({error: true, errorMsg: msg});
+    };
+  
+    api.register_user(display_name, email, password, hometown, successFunc.bind(this), errorFunc.bind(this));
   }
 
   update_register_form(state) {
@@ -48,13 +44,13 @@ class RegisterForm  extends React.Component {
       let errmsg = [];
       if (this.state.error) {
           errmsg = <div className="alert alert-danger" role="alert">
-              Error registering user
+             {this.state.errorMsg} 
           </div>;
       }
       return <div>
             <h2>Register Here!</h2>
             {errmsg}
-              <form action="javascript:void(0)" onSubmit={() => self.register()}>
+              <form action="javascript:void(0)" onSubmit={this.register.bind(this)}>
                   <div className="form-group">
                       <label htmlFor="display_name">Display Name</label>
                       <input type="text" placeholder="John Smith" id="display_name"
@@ -75,7 +71,7 @@ class RegisterForm  extends React.Component {
                   </div>
                   <div className="form-group">
                       <label htmlFor="hometown">Hometown</label>
-                      <input type="text" id="hometown" placeholder="Boston, MA"
+                      <input type="text" id="hometown" placeholder="Boston, US"
                           className="form-control"
                           onChange={(ev) => self.update_register_form({hometown: ev.target.value})} />
                   </div>

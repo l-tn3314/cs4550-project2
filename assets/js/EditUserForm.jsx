@@ -11,6 +11,7 @@ class EditUserForm  extends React.Component {
     this.state = {
         user_id: props.user_id,
         error: false,
+        errorMsg: "",
         edited: false,
         display_name: "Loading",
         email: "Loading",
@@ -37,7 +38,8 @@ class EditUserForm  extends React.Component {
       this.setState({edited: true, error: false});
     };
     let errorFunc = (resp) => {
-      this.setState({error: true});
+      let msg = resp.responseText;
+      this.setState({error: true, errorMsg: msg});
     };
   
     api.update_user(this.props.session.token, this.props.session.user_id, new_obj, successFunc.bind(this), errorFunc.bind(this));
@@ -72,7 +74,7 @@ class EditUserForm  extends React.Component {
       let msg = [];
       if (this.state.error) {
           msg = <div className="alert alert-danger" role="alert">
-              Error updating user
+              {this.state.errorMsg}
           </div>;
       } else if (this.state.edited) {
           msg = <div className="alert alert-info" role="alert">
@@ -112,7 +114,7 @@ class EditUserForm  extends React.Component {
                   </div>
                   <div className="form-group">
                       <label htmlFor="hometown">Hometown</label>
-                      <input type="text" id="hometown" placeholder="Boston, MA" value={this.state.hometown}
+                      <input type="text" id="hometown" placeholder="Boston, US" value={this.state.hometown}
                           className="form-control"
                           onChange={(ev) => self.update_edit_form({hometown: ev.target.value})} />
                   </div>
