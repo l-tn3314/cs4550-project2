@@ -11,4 +11,5 @@ echo "Starting app..."
 
 # Start to run in background from shell.
 
-_build/prod/rel/project2/bin/project2 foreground
+#_build/prod/rel/project2/bin/project2 foreground
+MIX_ENV=prod PORT=4995 mix phx.server
