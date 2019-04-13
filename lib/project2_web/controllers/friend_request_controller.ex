@@ -24,7 +24,7 @@ defmodule Project2Web.FriendRequestController do
   end
   def create(conn, %{"user_id" => user_id}) do
     current_user_id = conn.assigns.current_user.id
-    with {:ok, %FriendRequest{} = friend_request} <- Friends.create_friend_request(%{"sender_id": current_user_id, "receiver_id": user_id}) do
+    with {:ok, %FriendRequest{} = friend_request} <- Friends.create_friend_request(%{sender_id: current_user_id, receiver_id: user_id}) do
       # user creating the friend request
       user = Users.get_user!(current_user_id)
       Project2Web.Endpoint.broadcast!("notifications:lobby", "friend_request", %{from: friend_request.sender_id, to: friend_request.receiver_id, sender_displayname: user.display_name})
@@ -53,7 +53,7 @@ defmodule Project2Web.FriendRequestController do
     friend_request = Friends.get_user_friend_request(user_id, current_user_id)
     if friend_request do   
       Friends.delete_friend_request(friend_request)
-      Friends.create_friend(%{"lower_user_id": min(user_id, current_user_id), "higher_user_id": max(user_id, current_user_id)})
+      Friends.create_friend(%{lower_user_id: min(user_id, current_user_id), higher_user_id: max(user_id, current_user_id)})
       render(conn, "show.json", friend_request: friend_request)
     else 
       render(conn, "show.json", friend_request: friend_request)
