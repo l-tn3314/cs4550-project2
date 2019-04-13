@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 function Notification(props) {
   // props.type, props.sender_displayname, props.from
   console.log(props);
-  let {type, sender_displayname, from, closeCallback, recipient_displayname, msg} = props
+  let {type, sender_displayname, from, ent_id, closeCallback, recipient_displayname, msg} = props
 
   let content;
-  
+
   switch(type) {
     case 'FRIEND_REQUEST':
       content = <span><Link to={"/users/" + from}>{sender_displayname}</Link> sent you a friend request!</span> 
@@ -23,6 +23,9 @@ function Notification(props) {
       break;
     case 'POKE_FAIL':
       content = <span>Poke to <i>{recipient_displayname}</i> failed... {msg}</span>
+      break;
+    case 'REPLY':
+      content = <span><Link to={"/users/" + from}>{sender_displayname}</Link> replied to your <Link to={"/posts/" + ent_id}>post</Link>!</span> 
       break;
     default:
       content = <span>Easter egg ;)</span>

@@ -56,6 +56,10 @@ class Root extends React.Component {
         };
         this.channel.on("poke", pokeNotif.bind(this));
 
+        let replyNotif = (payload) => {
+            this.setNotif(payload, "REPLY");
+        };
+        this.channel.on("reply", replyNotif.bind(this));
     }
    
     setChannelJoined() {
