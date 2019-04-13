@@ -40,27 +40,17 @@ defmodule Project2Web.NotificationsChannel do
     true
   end
 
-  intercept ["poke", "friend_request"]
+  intercept ["poke", "friend_request", "friend_accept"]
 
-  def handle_out("poke", payload, socket) do
-    current_id = socket.assigns.current_user_id
-    if (current_id == payload.to) do
-      # send a notification to the state
-      push(socket, "poke", payload)
-      {:noreply, socket}
-    else
-      {:noreply, socket} 
-    end
-  end
-
-  def handle_out("friend_request", payload, socket) do
+  def handle_out(ev, payload, socket) when ev in ["poke", "friend_request", "friend_accept"] do
     current_id = Map.has_key?(socket.assigns, :current_user_id) && socket.assigns.current_user_id
     if (current_id == payload.to) do
       # send a notification to the state
-      push(socket, "friend_request", payload)
+      push(socket, ev, payload)
       {:noreply, socket}
     else
       {:noreply, socket}
     end
   end
+
 end

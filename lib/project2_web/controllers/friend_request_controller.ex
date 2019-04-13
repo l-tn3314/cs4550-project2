@@ -50,10 +50,13 @@ defmodule Project2Web.FriendRequestController do
   def update(conn, %{"user_id" => user_id}) do
     current_user_id = conn.assigns.current_user.id
     
+    {user_id, _} = Integer.parse(user_id)
+
     friend_request = Friends.get_user_friend_request(user_id, current_user_id)
     if friend_request do   
       Friends.delete_friend_request(friend_request)
       Friends.create_friend(%{lower_user_id: min(user_id, current_user_id), higher_user_id: max(user_id, current_user_id)})
+      Project2Web.Endpoint.broadcast!("notifications:lobby", "friend_accept", %{from: current_user_id, to: user_id, sender_displayname: conn.assigns.current_user.display_name})
       render(conn, "show.json", friend_request: friend_request)
     else 
       render(conn, "show.json", friend_request: friend_request)

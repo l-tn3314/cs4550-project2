@@ -10,7 +10,10 @@ function Notification(props) {
   
   switch(type) {
     case 'FRIEND_REQUEST':
-      content = <span><Link to={"/users/" + from}>{sender_displayname}</Link> send you a friend request!</span> 
+      content = <span><Link to={"/users/" + from}>{sender_displayname}</Link> sent you a friend request!</span> 
+      break;
+    case 'FRIEND_ACCEPT':
+      content = <span><Link to={"/users/" + from}>{sender_displayname}</Link> accepted your friend request!</span> 
       break;
     case 'POKE':
       content = <span><Link to={"/users/" + from}>{sender_displayname}</Link> poked you!</span> 

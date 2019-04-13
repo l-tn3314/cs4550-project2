@@ -37,8 +37,8 @@ defmodule Project2Web.PokeController do
           (weather == "Clouds" and accuracy > 20) or 
           (weather == "Rain" and accuracy > 50) or 
           (weather == "Snow" and accuracy > 80) do
-          with {:ok, %Poke{} = poke} <- Pokes.create_poke(%{"sender": current_user_id, "recipient": user_id}) do
-            Project2Web.Endpoint.broadcast!("notifications:lobby", "poke", %{from: poke.sender, to: poke.recipient, "sender_displayname": user.display_name})
+          with {:ok, %Poke{} = poke} <- Pokes.create_poke(%{sender: current_user_id, recipient: user_id}) do
+            Project2Web.Endpoint.broadcast!("notifications:lobby", "poke", %{from: poke.sender, to: poke.recipient, sender_displayname: user.display_name})
             new_points = user.points + 100
             Project2.Users.update_user(user, %{points: new_points})
             create(conn, poke)

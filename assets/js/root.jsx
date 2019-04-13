@@ -40,10 +40,16 @@ class Root extends React.Component {
         };
         this.fetch_users();
 
+        // Set up notifications
         let friendRequestNotif = (payload) => {
           this.setNotif(payload, "FRIEND_REQUEST");
         };
         this.channel.on("friend_request", friendRequestNotif.bind(this));
+
+        let friendAcceptNotif = (payload) => {
+          this.setNotif(payload, "FRIEND_ACCEPT");
+        };
+        this.channel.on("friend_accept", friendAcceptNotif.bind(this));
 
         let pokeNotif = (payload) => {
             this.setNotif(payload, "POKE");
