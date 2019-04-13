@@ -6,7 +6,7 @@ Type=simple
 User=pokester
 Group=pokester
 Restart=on-failure
-Environment=MIX_ENV=prod "PORT=4995"
+Environment=MIX_ENV=prod "PORT=4797"
 Environment=LANG=en_US.UTF-8
 
 WorkingDirectory=/home/pokester/pokester

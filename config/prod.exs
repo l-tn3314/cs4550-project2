@@ -10,8 +10,11 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :project2, Project2Web.Endpoint,
-  http: [:inet6, port: System.get_env("PORT") || 4995],
-  url: [host: "pokester.cs4550abinader.com", port: 80],
+  server: true,
+  root: ".",
+  version: Application.spec(:phoenix_distillery, :vsn),
+  http: [:inet6, port: {:system, "PORT"}],
+  url: [host: "pokester.notbreaking.xyz", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
@@ -22,7 +25,7 @@ config :logger, level: :info
 # To get SSL working, you will need to add the `https` key
 # to the previous section and set your `:url` port to 443:
 #
-#     config :project2, Project2Web.Endpoint,
+#     config :task_tracker, TaskTrackerWeb.Endpoint,
 #       ...
 #       url: [host: "example.com", port: 443],
 #       https: [
@@ -46,7 +49,7 @@ config :logger, level: :info
 # We also recommend setting `force_ssl` in your endpoint, ensuring
 # no data is ever sent via http, always redirecting to https:
 #
-#     config :project2, Project2Web.Endpoint,
+#     config :task_tracker, TaskTrackerWeb.Endpoint,
 #       force_ssl: [hsts: true]
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
@@ -61,11 +64,31 @@ config :logger, level: :info
 # Alternatively, you can configure exactly which server to
 # start per endpoint:
 #
-#     config :project2, Project2Web.Endpoint, server: true
+#     config :task_tracker, TaskTrackerWeb.Endpoint, server: true
 #
 # Note you can't rely on `System.get_env/1` when using releases.
 # See the releases documentation accordingly.
 
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.
-import_config "prod.secret.exs"
+#import_config "prod.secret.exs"
+get_secret = fn name ->
+  base = Path.expand("~/.config/pokester")
+  File.mkdir_p!(base)
+  path = Path.join(base, name)
+  unless File.exists?(path) do
+    secret = Base.encode16(:crypto.strong_rand_bytes(32))
+    File.write!(path, secret)
+  end
+  String.trim(File.read!(path))
+end
+
+config :project2, Project2Web.Endpoint,
+  secret_key_base: get_secret.("key_base")
+
+# Config database
+config :project2, Project2.Repo,
+  username: "pokester",
+  password: get_secret.("db_pass"),
+  database: "pokester_prod",
+  pool_size: 15

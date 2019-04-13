@@ -2,14 +2,14 @@ server {
     listen 80;
     listen [::]:80;
 
-    server_name pokester.cs4550abinader.com; 
+    server_name pokester.notbreaking.xyz; 
 
     location / {
-        proxy_pass http://localhost:4995;
+        proxy_pass http://localhost:4797;
     }
 
     location /socket {
-        proxy_pass http://localhost:4995;
+        proxy_pass http://localhost:4797;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";

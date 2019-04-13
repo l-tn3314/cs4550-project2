@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export MIX_ENV=prod
-export PORT=4995
+export PORT=4797
 
 echo "Stopping old copy of app, if any..."
 
@@ -11,5 +11,4 @@ echo "Starting app..."
 
 # Start to run in background from shell.
 
-#_build/prod/rel/project2/bin/project2 foreground
-MIX_ENV=prod PORT=4995 mix phx.server
+_build/prod/rel/project2/bin/project2 foreground
