@@ -39,6 +39,10 @@ alias Project2.Replies.Reply
 
 Repo.insert!(%Reply{content: "Wow I could go for some of those...", user_id: 2, post_id: 1, time: DateTime.truncate(DateTime.utc_now(), :second)})
 
+alias Project2.Pokes.Poke
+Repo.insert!(%Poke{sender: 2, recipient: 1})
+
 alias Project2.Notifications.Notification
 
 Repo.insert!(%Notification{ent_id: 1, time: DateTime.truncate(DateTime.utc_now(), :second), type: "reply", user_id: 1, actor_id: 2})
+Repo.insert!(%Notification{ent_id: 1, time: DateTime.truncate(DateTime.utc_now(), :second), type: "poke", user_id: 1, actor_id: 2})
