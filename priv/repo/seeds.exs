@@ -46,3 +46,5 @@ alias Project2.Notifications.Notification
 
 Repo.insert!(%Notification{ent_id: 1, time: DateTime.truncate(DateTime.utc_now(), :second), type: "reply", user_id: 1, actor_id: 2})
 Repo.insert!(%Notification{ent_id: 1, time: DateTime.truncate(DateTime.utc_now(), :second), type: "poke", user_id: 1, actor_id: 2})
+Repo.insert!(%Notification{ent_id: 1, time: DateTime.truncate(DateTime.utc_now(), :second), type: "friend_request", user_id: 3, actor_id: 1})
+Repo.insert!(%Notification{ent_id: 1, time: DateTime.truncate(DateTime.utc_now(), :second), type: "friend_request", user_id: 1, actor_id: 4})
