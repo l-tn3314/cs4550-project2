@@ -3,9 +3,32 @@ defmodule Project2Web.NotificationController do
 
   alias Project2.Notifications
   alias Project2.Notifications.Notification
+  alias Project2.Users
 
   action_fallback Project2Web.FallbackController
 
+  plug Project2Web.Plugs.RequireAuth when action in [:index]
+
+  def index(conn, %{"user_id" => user_id}) do
+    current_user_id = Map.has_key?(conn.assigns, :current_user) && conn.assigns.current_user.id
+    {user_id, _} = Integer.parse(user_id)
+    
+    # a user should only be able to see their own notifications
+    if (current_user_id == user_id) do
+      notifs = Notifications.list_notifications_for(user_id)
+      |> Enum.map(fn notif -> 
+          if notif.actor_id do
+            actor = Users.get_user!(notif.actor_id)
+            Map.put(notif, :actor_displayname, actor.display_name)   
+          else
+            Map.put(notif, :actor_displayname, nil)
+          end
+        end)   
+      render(conn, "index.json", notifications: notifs)
+    else 
+      render(conn, "index.json", notifications: [])
+    end 
+  end
   def index(conn, _params) do
     notifications = Notifications.list_notifications()
     render(conn, "index.json", notifications: notifications)

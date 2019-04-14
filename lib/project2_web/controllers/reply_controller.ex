@@ -1,9 +1,10 @@
 defmodule Project2Web.ReplyController do
   use Project2Web, :controller
 
+  alias Project2.Notifications
+  alias Project2.Posts
   alias Project2.Replies
   alias Project2.Replies.Reply
-  alias Project2.Posts
 
   action_fallback Project2Web.FallbackController
 
@@ -19,7 +20,13 @@ defmodule Project2Web.ReplyController do
     
     with {:ok, %Reply{} = reply} <- Replies.create_reply(reply_params) do
       post = Posts.get_post!(reply.post_id)
-      Project2Web.Endpoint.broadcast!("notifications:lobby", "reply", %{from: reply.user_id, to: post.user_id, sender_displayname: conn.assigns.current_user.display_name, ent_id: post.id})
+      
+      # notify recipient
+      ev_type = "reply"
+      Project2Web.Endpoint.broadcast!("notifications:lobby", ev_type, %{from: reply.user_id, to: post.user_id, sender_displayname: conn.assigns.current_user.display_name, ent_id: post.id})
+      current_time = DateTime.truncate(DateTime.utc_now(), :second)
+      Notifications.create_notification(%{ent_id: post.id, time: current_time, type: ev_type, user_id: post.user_id, actor_id: reply.user_id})
+
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.reply_path(conn, :show, reply))

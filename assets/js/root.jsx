@@ -7,6 +7,7 @@ import $ from 'jquery';
 import Header from './Header';
 import Notification from './Notification';
 import Post from './Post';
+import UserNotifications from './UserNotifications';
 import UserProfile from './UserProfile';
 import RegisterForm from './RegisterForm';
 import EditUserForm from './EditUserForm';
@@ -135,6 +136,9 @@ class Root extends React.Component {
           } />
           <Route path="/posts/:id" render={(props) =>
             <Post {...props} session={this.state.session} />
+          } />
+          <Route path="/notifications" render={(props) =>
+            <UserNotifications {...props} session={this.state.session} />
           } />
           <Route path="/register" render={() =>
             <RegisterForm session={this.state.session} />

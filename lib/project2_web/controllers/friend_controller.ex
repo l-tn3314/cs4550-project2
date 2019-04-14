@@ -43,6 +43,7 @@ defmodule Project2Web.FriendController do
     end
   end
   def delete(conn, %{"user_id" => user_id}) do
+    {user_id, _} = Integer.parse(user_id)
     current_user_id = conn.assigns.current_user.id
     with {:ok, %Friend{}} <- Friends.delete_friend(current_user_id, user_id) do
       send_resp(conn, :no_content, "")

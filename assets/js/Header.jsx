@@ -30,6 +30,10 @@ function Header(props) {
               <Link to={"/edituser"}>Edit Profile</Link>
             </div>;
     }
+  
+    let myNotifs = session == null
+      ? null
+      : <span className="header-notifs"><Link to={"/notifications"}>My Notifications</Link></span>
 
     return <div className="row my-2">
         <div className="col-4">
@@ -38,6 +42,7 @@ function Header(props) {
         <div className="col-4">
             <p>
               <Link to={"/users"}>Users</Link>
+              {myNotifs}
             </p>
         </div>
         <div className="col-4">

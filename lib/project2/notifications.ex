@@ -21,6 +21,12 @@ defmodule Project2.Notifications do
     Repo.all(Notification)
   end
 
+  def list_notifications_for(user_id) do
+    notif_query = from n in Notification,
+      where: n.user_id == ^user_id
+    Repo.all(notif_query)
+  end
+
   @doc """
   Gets a single notification.
 

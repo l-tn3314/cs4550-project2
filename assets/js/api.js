@@ -38,6 +38,25 @@ class TheServer {
     });
   }
   
+  fetch_notifs(authToken, user_id, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
+    $.ajax("/api/v1/notifications/" + user_id, {
+      method: "get",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      headers: {"X-AUTH": authToken},
+      data: "",
+      success: (resp) => {
+        console.log("success!")
+        successCallback(resp);
+      },
+      error: (resp) => {
+        console.log("failed to fetch notifs for " + user_id);
+        console.log(resp);
+        errorCallback(resp);
+      },
+    });
+  }
+
   create_new_post(authToken, content, successCallback = (resp) => {}, errorCallback = (resp) => {}) {
     let current_time = new Date().toISOString();
     $.ajax("/api/v1/posts/", {

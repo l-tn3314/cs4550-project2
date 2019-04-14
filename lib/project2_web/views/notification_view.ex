@@ -14,7 +14,9 @@ defmodule Project2Web.NotificationView do
     %{id: notification.id,
       ent_id: notification.ent_id,
       type: notification.type,
-      formatted_msg: notification.formatted_msg,
-      time: notification.time}
+      time: notification.time,
+      user_id: notification.user_id,
+      actor_id: notification.actor_id,
+      actor_displayname: notification.actor_displayname}
   end
 end

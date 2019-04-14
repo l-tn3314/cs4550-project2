@@ -41,5 +41,6 @@ defmodule Project2Web.Router do
     put "/friendrequests/:user_id", FriendRequestController, :update    
     post "/pokes/:user_id", PokeController, :create
     post "/auth", AuthController, :authenticate
+    get "/notifications/:user_id", NotificationController, :index
   end
 end

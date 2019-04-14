@@ -4,6 +4,7 @@ defmodule Project2Web.FriendRequestController do
   alias Project2.Users
   alias Project2.Friends
   alias Project2.Friends.FriendRequest
+  alias Project2.Notifications
 
   action_fallback Project2Web.FallbackController
 
@@ -27,7 +28,13 @@ defmodule Project2Web.FriendRequestController do
     with {:ok, %FriendRequest{} = friend_request} <- Friends.create_friend_request(%{sender_id: current_user_id, receiver_id: user_id}) do
       # user creating the friend request
       user = Users.get_user!(current_user_id)
+      
+      # notify recipient
+      ev_type = "friend_request"
       Project2Web.Endpoint.broadcast!("notifications:lobby", "friend_request", %{from: friend_request.sender_id, to: friend_request.receiver_id, sender_displayname: user.display_name})
+      current_time = DateTime.truncate(DateTime.utc_now(), :second)
+      Notifications.create_notification(%{ent_id: friend_request.id, time: current_time, type: ev_type, user_id: friend_request.receiver_id, actor_id: friend_request.sender_id})
+            
       conn
       |> put_status(:created)  
       |> render("show.json", friend_request: friend_request)
@@ -56,7 +63,13 @@ defmodule Project2Web.FriendRequestController do
     if friend_request do   
       Friends.delete_friend_request(friend_request)
       Friends.create_friend(%{lower_user_id: min(user_id, current_user_id), higher_user_id: max(user_id, current_user_id)})
+      
+      # notify recipient
+      ev_type = "friend_accept"
       Project2Web.Endpoint.broadcast!("notifications:lobby", "friend_accept", %{from: current_user_id, to: user_id, sender_displayname: conn.assigns.current_user.display_name})
+      current_time = DateTime.truncate(DateTime.utc_now(), :second)
+      Notifications.create_notification(%{ent_id: friend_request.id, time: current_time, type: ev_type, user_id: friend_request.sender_id, actor_id: friend_request.receiver_id})
+      
       render(conn, "show.json", friend_request: friend_request)
     else 
       render(conn, "show.json", friend_request: friend_request)

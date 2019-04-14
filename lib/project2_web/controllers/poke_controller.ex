@@ -1,6 +1,7 @@
 defmodule Project2Web.PokeController do
   use Project2Web, :controller
 
+  alias Project2.Notifications
   alias Project2.Pokes
   alias Project2.Pokes.Poke
 
@@ -38,7 +39,13 @@ defmodule Project2Web.PokeController do
           (weather == "Rain" and accuracy > 50) or 
           (weather == "Snow" and accuracy > 80) do
           with {:ok, %Poke{} = poke} <- Pokes.create_poke(%{sender: current_user_id, recipient: user_id}) do
+
+            # notify recipient
+            ev_type = "poke"
             Project2Web.Endpoint.broadcast!("notifications:lobby", "poke", %{from: poke.sender, to: poke.recipient, sender_displayname: user.display_name})
+            current_time = DateTime.truncate(DateTime.utc_now(), :second)
+            Notifications.create_notification(%{ent_id: poke.id, time: current_time, type: ev_type, user_id: poke.recipient, actor_id: poke.sender})            
+
             new_points = user.points + 100
             Project2.Users.update_user(user, %{points: new_points})
             create(conn, poke)
