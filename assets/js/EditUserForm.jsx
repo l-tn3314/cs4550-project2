@@ -21,7 +21,9 @@ class EditUserForm  extends React.Component {
   }
 
   componentDidMount() {
+    if (this.props.session) {
       api.fetch_user(this.props.session.token, this.props.session.user_id, this.update_edit_form.bind(this))
+    }
   }
 
   edit() {
@@ -90,7 +92,9 @@ class EditUserForm  extends React.Component {
         </div>;
       }
 
-      return <div>
+      return !this.props.session 
+        ? <h3>Log in to edit your user information</h3> 
+        : <div>
             <h2>Edit Profile</h2>
             {msg}
               <form action="javascript:void(0)" onSubmit={this.edit.bind(this)}>

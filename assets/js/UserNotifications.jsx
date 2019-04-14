@@ -18,11 +18,15 @@ class UserNotifications extends React.Component {
       }
     */
     this.state = {
-      notifs: []
+      notifs: null
     }; 
   
-    let token = this.props.session ? this.props.session.token : null;  
-    api.fetch_notifs(token, this.props.session.user_id, this.updateState.bind(this));
+  }
+
+  componentDidMount() {
+    if (this.props.session) {
+      api.fetch_notifs(this.props.session.token, this.props.session.user_id, this.updateState.bind(this));
+    }    
   }
 
   updateState(state) {
@@ -45,24 +49,26 @@ class UserNotifications extends React.Component {
   }
 
   render() {
-    let rows = this.state.notifs.length == 0 
-        ? <p>Loading...</p>
-        : _.map(this.state.notifs, this.renderNotif);
+
+    let rows = this.state.notifs
+        ? _.map(this.state.notifs, this.renderNotif)
+        : <tr><td><p>Loading...</p></td></tr>;
     
-    return <div>
-        <div className="row">
-          <div className="col-12">
-            <table className="table table-striped">
-              <thead>
-                <tr><th>My Notifications</th></tr>
-              </thead>
-              <tbody>
-                {rows}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>;
+    return !this.props.session
+        ? <div><h3>Log in to view your notifications</h3></div>
+        : <div className="row">
+            <div className="col-12">
+              <table className="table table-striped">
+                <thead>
+                  <tr><th>My Notifications</th></tr>
+                </thead>
+                  <tbody>
+                    {rows}
+                </tbody>
+              </table>
+            </div>
+          </div>;
+      
   }
 }
 
